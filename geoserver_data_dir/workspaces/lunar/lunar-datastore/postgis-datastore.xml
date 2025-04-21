@@ -1,0 +1,22 @@
+<dataStore>
+  <name>postgis-datastore</name>
+  <type>PostGIS</type>
+  <enabled>true</enabled>
+  <workspace>
+    <name>lunar</name>
+  </workspace>
+  <connectionParameters>
+    <entry key="host">db</entry>
+    <entry key="port">5432</entry>
+    <entry key="database">moon_base</entry>
+    <entry key="user">moon_admin</entry>
+    <entry key="passwd">secure_password</entry>
+    <entry key="dbtype">postgis</entry>
+    <entry key="schema">public</entry>
+    <entry key="Expose primary keys">true</entry>
+    <entry key="minio.endpoint">http://minio:9000</entry>
+    <entry key="minio.access_key">minioadmin</entry> 
+    <entry key="minio.secret_key">minioadmin</entry>
+    <entry key="minio.bucket">geodata</entry>
+  </connectionParameters>
+</dataStore>

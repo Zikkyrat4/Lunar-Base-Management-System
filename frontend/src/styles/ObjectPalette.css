@@ -1,0 +1,55 @@
+.object-palette {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 12px;
+    padding: 12px;
+    background: #fafafa;
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+  
+  .object-item {
+    border: 2px solid #d9d9d9;
+    border-radius: 8px;
+    padding: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .object-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .object-item.selected {
+    border-width: 3px;
+    background-color: #f0f9ff;
+  }
+  
+  .object-icon {
+    margin-bottom: 4px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: rgba(24, 144, 255, 0.1);
+  }
+  
+  .object-item.selected .object-icon {
+    background-color: rgba(24, 144, 255, 0.2);
+  }
+  
+  .object-name {
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+  }

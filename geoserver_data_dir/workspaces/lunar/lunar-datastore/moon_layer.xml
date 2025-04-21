@@ -1,0 +1,13 @@
+<coverage>
+  <name>moon_surface</name>
+  <nativeFormat>geotiff</nativeFormat>
+  <store>moon_store</store>
+  <enabled>true</enabled>
+  <metadata>
+    <entry key="time">
+      <dimensionInfo>
+        <enabled>false</enabled>
+      </dimensionInfo>
+    </entry>
+  </metadata>
+</coverage>

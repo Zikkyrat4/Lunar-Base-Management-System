@@ -1,0 +1,115 @@
+
+services:
+  db:
+    image: postgis/postgis:13-3.1
+    environment:
+      POSTGRES_USER: moon_admin
+      POSTGRES_PASSWORD: secure_password
+      POSTGRES_DB: moon_base
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - moon_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U moon_admin -d moon_base"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  geoserver:
+    image: kartoza/geoserver:2.19.0
+    environment:
+      - GEOSERVER_ADMIN_PASSWORD=geoserver
+      - GEOSERVER_ADMIN_USER=admin
+      - GEOSERVER_ADMIN_ENABLED=true
+      - ENABLE_JSONP=true
+      - MAX_FILTER_RULES=20
+      - OPTIMIZE_LINE_WIDTH=false
+      - STABLE_EXTENSIONS=all
+      - COMMUNITY_EXTENSIONS=all
+      - JAVA_OPTS=-Dlog4j.configuration=file:/opt/geoserver/data_dir/log4j.properties --illegal-access=deny
+    volumes:
+      - geoserver_data:/opt/geoserver/data_dir
+      - ./geoserver_data_dir:/opt/geoserver/data_dir/workspaces/lunar
+    ports:
+      - "8080:8080"
+    networks:
+      - moon_network
+    depends_on:
+      db:
+        condition: service_healthy
+
+  minio:
+    image: minio/minio
+    command: server /data
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - minio_data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    networks:
+      - moon_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  backend:
+    build: ./backend
+    environment:
+      - DATABASE_URL=postgresql://moon_admin:secure_password@db:5432/moon_base
+      - GEOSERVER_URL=http://geoserver:8080/geoserver
+      - MINIO_ENDPOINT=minio:9000
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+      - SECRET_KEY=your-secret-key-here
+      - ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=1440
+      - MAX_UPLOAD_SIZE=53687091200
+      - NGINX_MAX_BODY_SIZE=50G
+      - CLIENT_MAX_BODY_SIZE=50G
+    volumes:
+      - ./backend:/app
+      - ./uploads:/app/uploads
+    ports:
+      - "8000:8000"
+    networks:
+      - moon_network
+    depends_on:
+      db:
+        condition: service_healthy
+      geoserver:
+        condition: service_started
+      minio:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - ./uploads:/app/uploads
+    ports:
+      - "3000:80"
+    networks:
+      - moon_network
+    depends_on:
+      - backend
+      - geoserver
+    environment:
+      - NGINX_MAX_BODY_SIZE=50G
+
+networks:
+  moon_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  geoserver_data:
+  minio_data:
