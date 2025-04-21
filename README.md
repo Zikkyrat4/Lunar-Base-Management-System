@@ -1,4 +1,3 @@
-```markdown
 # Lunar Base Management System
 
 ## Описание проекта
@@ -110,5 +109,4 @@ docker-compose logs -f
 
 Sherlock team
 
-```
 ```
