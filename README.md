@@ -108,5 +108,3 @@ docker-compose logs -f
 ## Авторы
 
 Sherlock team
-
-```
