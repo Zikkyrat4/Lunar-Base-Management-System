@@ -140,7 +140,7 @@ const MapView = ({ simplified = false }) => {
   const [selectedObject, setSelectedObject] = useState(null);
   const [placementMode, setPlacementMode] = useState(false);
   const [selectedObjectType, setSelectedObjectType] = useState(null);
-  const [objects, setObjects] = useState([]);
+  const [objects, setObjects] = useState(() => []);
   const [exportFormat, setExportFormat] = useState('png');
   const mapRef = useRef(null);
   const token = useSelector((state) => state.auth.token);
@@ -155,15 +155,19 @@ const MapView = ({ simplified = false }) => {
           'Authorization': `Bearer ${token}`
         }
       });
-      setUserMaps(response.data);
       
-      const firstGeoTiff = response.data.find(map => map.file_type === 'geotiff');
+      // Убедитесь, что response.data - это массив
+      const mapsData = Array.isArray(response.data) ? response.data : [];
+      setUserMaps(mapsData);
+      
+      const firstGeoTiff = mapsData.find(map => map.file_type === 'geotiff');
       if (firstGeoTiff) {
         setBaseLayerId(firstGeoTiff.id);
       }
     } catch (error) {
       setError('Ошибка загрузки списка карт');
       console.error('Failed to fetch maps:', error);
+      setUserMaps([]); // Устанавливаем пустой массив при ошибке
     } finally {
       setLoading(false);
     }
@@ -172,9 +176,10 @@ const MapView = ({ simplified = false }) => {
   const fetchObjects = useCallback(async () => {
     try {
       const response = await api.get('/objects/');
-      setObjects(response.data);
+      setObjects(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       message.error('Ошибка загрузки объектов');
+      setObjects([]); // Убедитесь, что устанавливается массив
     }
   }, []);
 

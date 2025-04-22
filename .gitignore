@@ -1,0 +1,8 @@
+node_modules/
+package-lock.json
+
+project_contents.txt
+
+.DS_Store
+dist/
+*.log
