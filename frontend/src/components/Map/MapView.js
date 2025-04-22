@@ -400,6 +400,7 @@ const MapView = ({ simplified = false }) => {
   if (simplified) {
     return (
       <MapContainer 
+        crs={L.CRS.EPSG3857}
         center={[20.5, 30.4]} 
         zoom={15} 
         style={{ height: '100vh', width: '100%' }}
@@ -515,6 +516,7 @@ const MapView = ({ simplified = false }) => {
         
         <div style={{ flex: 1, position: 'relative' }}>
           <MapContainer 
+            crs={L.CRS.EPSG3857}
             center={[20.5, 30.4]} 
             zoom={15} 
             style={{ height: '100%', width: '100%' }}
