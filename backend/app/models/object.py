@@ -10,3 +10,4 @@ class LunarObject(Base):
     lat = Column(Float, nullable=False)
     lng = Column(Float, nullable=False)
     created_at = Column(DateTime, nullable=False)
+    restriction_radius = Column(Float, default=50.0)

@@ -183,6 +183,18 @@ const MapView = ({ simplified = false }) => {
     }
   }, []);
 
+  const handleUpdateObject = useCallback(async (objectId, updates) => {
+    try {
+      const response = await api.patch(`/objects/${objectId}`, updates);
+      setObjects(prev => 
+        prev.map(obj => obj.id === objectId ? { ...obj, ...response.data } : obj)
+      );
+      message.success('Объект обновлен');
+    } catch (error) {
+      message.error('Ошибка при обновлении объекта');
+    }
+  }, []);
+
   const handleDeleteMap = useCallback(async (mapId) => {
     try {
       await api.delete(`/maps/${mapId}`);
@@ -283,15 +295,28 @@ const MapView = ({ simplified = false }) => {
 
   const handleMapClick = useCallback(async (e) => {
     if (placementMode && selectedObjectType) {
+      const newPosition = e.latlng;
+      
+      // Проверка на пересечение с существующими зонами
+      const isPositionValid = objects.every(obj => {
+        const distance = mapRef.current.distance(newPosition, [obj.lat, obj.lng]);
+        return distance > obj.restriction_radius;
+      });
+      
+      if (!isPositionValid) {
+        message.error('Невозможно разместить объект - пересечение с зоной ограничения');
+        return;
+      }
+  
       const newObject = {
-        id: uuidv4(),
         type: selectedObjectType,
-        lat: e.latlng.lat,
-        lng: e.latlng.lng,
+        lat: newPosition.lat,
+        lng: newPosition.lng,
         name: `${selectedObjectType}-${Date.now()}`,
+        restriction_radius: 50, // Значение по умолчанию
         createdAt: new Date().toISOString()
       };
-
+  
       try {
         const response = await api.post('/objects/', newObject);
         setObjects(prev => [...prev, response.data]);
@@ -301,7 +326,7 @@ const MapView = ({ simplified = false }) => {
         message.error('Ошибка при сохранении объекта');
       }
     }
-  }, [placementMode, selectedObjectType]);
+  }, [placementMode, selectedObjectType, objects]);
 
   const handleLayerToggle = useCallback((layerId) => {
     setActiveLayers(prev => ({
@@ -419,7 +444,7 @@ const MapView = ({ simplified = false }) => {
         <ObjectMarkers 
           objects={objects} 
           onDelete={handleDeleteObject}
-          onSelect={setSelectedObject}
+          onUpdate={handleUpdateObject}
         />
       </MapContainer>
     );
@@ -536,7 +561,7 @@ const MapView = ({ simplified = false }) => {
             <ObjectMarkers 
               objects={objects} 
               onDelete={handleDeleteObject}
-              onSelect={setSelectedObject}
+              onUpdate={handleUpdateObject}
             />
           </MapContainer>
 

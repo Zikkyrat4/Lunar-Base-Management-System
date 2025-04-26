@@ -37,3 +37,20 @@ def delete_object(object_id: str, db: Session = Depends(get_db)):
     db.delete(db_obj)
     db.commit()
     return {"ok": True}
+
+@router.patch("/{object_id}", response_model=Object)
+def update_object(
+    object_id: str,
+    obj_update: dict,
+    db: Session = Depends(get_db)
+):
+    db_obj = db.query(LunarObject).filter(LunarObject.id == object_id).first()
+    if not db_obj:
+        raise HTTPException(status_code=404, detail="Object not found")
+    
+    for field, value in obj_update.items():
+        setattr(db_obj, field, value)
+    
+    db.commit()
+    db.refresh(db_obj)
+    return db_obj

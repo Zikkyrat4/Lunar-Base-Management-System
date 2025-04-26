@@ -252,3 +252,127 @@ body {
 .ant-alert-info .ant-alert-message {
   color: white !important;
 }
+
+/* Стили для зон ограничений */
+.leaflet-interactive {
+  transition: stroke 0.3s, fill-opacity 0.3s;
+}
+
+.leaflet-object-zone {
+  stroke-width: 2;
+  stroke-dasharray: 5, 5;
+}
+
+.leaflet-object-zone:hover {
+  stroke-width: 3;
+  fill-opacity: 0.2;
+}
+
+/* Стили для объектов и зон ограничения */
+.object-icon {
+  transition: transform 0.2s;
+}
+
+.object-icon:hover {
+  transform: scale(1.1);
+}
+
+.object-popup .ant-descriptions-item-label {
+  font-weight: 500;
+}
+
+.object-restriction-zone {
+  stroke-dasharray: 5, 5;
+  transition: stroke-width 0.3s, fill-opacity 0.3s;
+}
+
+.object-restriction-zone:hover {
+  stroke-width: 3;
+  fill-opacity: 0.15;
+}
+
+.zone-tooltip .leaflet-tooltip-content {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 4px;
+  padding: 6px 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+.zone-tooltip .leaflet-tooltip-tip {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+/* Стили для объектов и зон */
+.object-marker {
+  transition: transform 0.3s;
+}
+
+.object-marker:hover {
+  transform: scale(1.15);
+}
+
+.object-popup .ant-descriptions-header {
+  margin-bottom: 8px;
+}
+
+.object-popup .ant-descriptions-item-label {
+  font-weight: 600;
+}
+
+.restriction-zone {
+  transition: all 0.3s;
+}
+
+.restriction-zone:hover {
+  fill-opacity: 0.2 !important;
+  stroke-width: 3 !important;
+}
+
+.zone-tooltip .leaflet-tooltip-content {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 4px 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  font-size: 12px;
+}
+
+.zone-tooltip .leaflet-tooltip-tip {
+  background: rgba(255, 255, 255, 0.95);
+}
+
+/* Стили для красивых объектов */
+.custom-object-icon {
+  transition: transform 0.3s ease-out;
+}
+
+.custom-object-icon:hover {
+  transform: scale(1.15) translateY(-5px);
+}
+
+.object-popup .ant-descriptions-item-label {
+  font-weight: 600;
+  color: #666;
+}
+
+.object-popup .ant-descriptions-item-content {
+  font-weight: 500;
+}
+
+.restriction-zone {
+  transition: all 0.3s ease;
+}
+
+.restriction-zone:hover {
+  stroke-width: 3 !important;
+  fill-opacity: 0.15 !important;
+}
+
+.zone-tooltip .leaflet-tooltip-content {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.zone-tooltip .leaflet-tooltip-tip {
+  display: none;
+}

@@ -7,6 +7,7 @@ class ObjectBase(BaseModel):
     lat: float
     lng: float
     name: str
+    restriction_radius: float = 50.0 
 
 class ObjectCreate(ObjectBase):
     pass
