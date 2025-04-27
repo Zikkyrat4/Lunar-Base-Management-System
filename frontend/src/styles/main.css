@@ -339,3 +339,20 @@ body {
 .zone-tooltip .leaflet-tooltip-tip {
   background: rgba(255, 255, 255, 0.95);
 }
+
+.leaflet-control-layers {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 4px;
+  padding: 6px;
+}
+
+.leaflet-control-layers-toggle {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23333"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>') !important;
+  width: 30px;
+  height: 30px;
+}
+
+.leaflet-control-layers-expanded {
+  padding: 10px;
+  width: 200px;
+}

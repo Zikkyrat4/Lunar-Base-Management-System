@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tooltip } from 'antd';
+import { Tooltip, Row, Col } from 'antd';
 import { 
   HomeOutlined, RocketOutlined, ThunderboltOutlined,
   ExperimentOutlined, ToolOutlined, MedicineBoxOutlined,
@@ -21,20 +21,24 @@ const objectTypes = [
 const ObjectPalette = ({ onSelectObject, selectedType }) => {
   return (
     <div className="object-palette">
-      {objectTypes.map(obj => (
-        <Tooltip title={obj.name} key={obj.type}>
-          <div 
-            className={`object-item ${selectedType === obj.type ? 'selected' : ''}`}
-            onClick={() => onSelectObject(obj)}
-            style={{ borderColor: obj.color }}
-          >
-            <div className="object-icon" style={{ color: obj.color }}>
-              {React.cloneElement(obj.icon, { style: { fontSize: '24px' } })}
-            </div>
-            <div className="object-name">{obj.name}</div>
-          </div>
-        </Tooltip>
-      ))}
+      <Row gutter={[16, 16]}>
+        {objectTypes.map((obj, index) => (
+          <Col span={12} key={obj.type}>
+            <Tooltip title={obj.name}>
+              <div 
+                className={`object-item ${selectedType === obj.type ? 'selected' : ''}`}
+                onClick={() => onSelectObject(obj)}
+                style={{ borderColor: obj.color }}
+              >
+                <div className="object-icon" style={{ color: obj.color }}>
+                  {React.cloneElement(obj.icon, { style: { fontSize: '24px' } })}
+                </div>
+                <div className="object-name">{obj.name}</div>
+              </div>
+            </Tooltip>
+          </Col>
+        ))}
+      </Row>
     </div>
   );
 };

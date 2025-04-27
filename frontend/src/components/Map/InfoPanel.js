@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { Card, Descriptions, Button, Typography, Divider, Progress, Dropdown } from 'antd';
 import { PrinterOutlined, ExportOutlined, DownloadOutlined } from '@ant-design/icons';
+import { message } from 'antd';
+import * as MapUtils from './MapUtils';
 
 const { Text, Title } = Typography;
 
 const InfoPanel = ({ 
   coords, 
   selectedObject, 
-  onPrint, 
-  onExport,
-  exportFormat,
-  onExportFormatChange
+  objects = []
 }) => {
-  const [extendedInfo, setExtendedInfo] = useState({
+  const [exportFormat, setExportFormat] = useState('png');
+  const [extendedInfo] = useState({
     gravity: 1.62,
     solar_activity: 45,
     temperature: -153,
@@ -24,6 +24,29 @@ const InfoPanel = ({
     { key: 'pdf', label: 'PDF', icon: <DownloadOutlined /> },
     { key: 'geojson', label: 'GeoJSON', icon: <DownloadOutlined /> }
   ];
+
+  const handlePrint = () => {
+    try {
+      MapUtils.handlePrint();
+      message.success('Подготовка к печати...');
+    } catch (error) {
+      message.error('Ошибка при подготовке к печати');
+    }
+  };
+
+  const handleExport = (format = exportFormat) => {
+    try {
+      MapUtils.handleExport(format, objects);
+      message.success(`Экспорт в ${format.toUpperCase()} начат`);
+    } catch (error) {
+      message.error('Ошибка при экспорте');
+    }
+  };
+
+  const handleExportFormatChange = ({ key }) => {
+    setExportFormat(key);
+    handleExport(key);
+  };
 
   return (
     <Card 
@@ -39,10 +62,10 @@ const InfoPanel = ({
     >
       <Descriptions column={1} size="small">
         <Descriptions.Item label="Широта">
-          <Text copyable>{coords?.lat || '-'}</Text>
+          <Text copyable>{coords?.lat || 'Не определено'}</Text>
         </Descriptions.Item>
         <Descriptions.Item label="Долгота">
-          <Text copyable>{coords?.lng || '-'}</Text>
+          <Text copyable>{coords?.lng || 'Не определено'}</Text>
         </Descriptions.Item>
         <Descriptions.Item label="Высота">1,240 м</Descriptions.Item>
         <Descriptions.Item label="Температура">
@@ -77,17 +100,17 @@ const InfoPanel = ({
       <div style={{ marginTop: 16, display: 'flex', gap: 8 }}>
         <Button 
           icon={<PrinterOutlined />} 
-          onClick={onPrint}
+          onClick={handlePrint}
           block
         >
           Печать
         </Button>
         <Dropdown.Button
           icon={<ExportOutlined />}
-          onClick={() => onExport(exportFormat)}
+          onClick={() => handleExport()}
           menu={{
             items: exportMenuItems,
-            onClick: onExportFormatChange,
+            onClick: handleExportFormatChange,
             selectedKeys: [exportFormat]
           }}
           block
