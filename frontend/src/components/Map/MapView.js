@@ -1,3 +1,4 @@
+// src/components/Map/MapView.js
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { 
   MapContainer, TileLayer, LayersControl,
@@ -22,8 +23,8 @@ const MapView = ({ simplified = false }) => {
   const [coords, setCoords] = useState({ lat: null, lng: null });
   const [placementMode, setPlacementMode] = useState(false);
   const [selectedObjectType, setSelectedObjectType] = useState(null);
-  const [selectedObject, setSelectedObject] = useState(null); // Добавляем состояние для выбранного объекта
-  const [objects, setObjects] = useState([]); // Добавляем состояние для объектов
+  const [selectedObject, setSelectedObject] = useState(null);
+  const [objects, setObjects] = useState([]);
   const [userMaps, setUserMaps] = useState([]);
   const [activeLayers, setActiveLayers] = useState({
     elevation: { id: 'elevation', name: 'Рельеф', visible: true, opacity: 70, color: '#722ed1' },
@@ -39,7 +40,6 @@ const MapView = ({ simplified = false }) => {
   
     const map = mapRef.current;
     
-    // Обработчик движения карты
     const handleMove = () => {
       const center = map.getCenter();
       setCoords({
@@ -48,7 +48,6 @@ const MapView = ({ simplified = false }) => {
       });
     };
   
-    // Обработчик движения мыши
     const handleMouseMove = (e) => {
       setCoords({
         lat: e.latlng.lat.toFixed(6),
@@ -96,71 +95,67 @@ const MapView = ({ simplified = false }) => {
   }
 
   return (
-    <div style={{ padding: '24px', height: 'calc(100vh - 64px)' }}>
-      <div style={{ display: 'flex', height: '100%', gap: '20px' }}>
-        <MapControls 
-          placementMode={placementMode}
-          selectedObjectType={selectedObjectType}
-          setPlacementMode={setPlacementMode}
-          setSelectedObjectType={setSelectedObjectType}
-          mapRef={mapRef}
+    <div style={{ height: 'calc(100vh - 64px)' }}>
+      <MapControls 
+        placementMode={placementMode}
+        selectedObjectType={selectedObjectType}
+        setPlacementMode={setPlacementMode}
+        setSelectedObjectType={setSelectedObjectType}
+        mapRef={mapRef}
+        activeLayers={activeLayers}
+        setActiveLayers={setActiveLayers}
+        userMaps={userMaps}
+        setUserMaps={setUserMaps}
+        baseLayerId={baseLayerId}
+        setBaseLayerId={setBaseLayerId}
+      />
+      
+      <MapContainer 
+        crs={L.CRS.EPSG3857}
+        center={[20.5, 30.4]} 
+        zoom={15} 
+        style={{ height: '100%', width: '100%' }}
+        whenCreated={(map) => {
+          mapRef.current = map;
+          return map;
+        }}
+        className={placementMode ? 'placement-mode-active' : ''}
+      >
+        <MapLayers 
           activeLayers={activeLayers}
-          setActiveLayers={setActiveLayers}
           userMaps={userMaps}
-          setUserMaps={setUserMaps}
           baseLayerId={baseLayerId}
-          setBaseLayerId={setBaseLayerId}
         />
-        
-        <div style={{ flex: 1, position: 'relative' }}>
-          <MapContainer 
-            crs={L.CRS.EPSG3857}
-            center={[20.5, 30.4]} 
-            zoom={15} 
-            style={{ height: '100%', width: '100%' }}
-            whenCreated={(map) => {
-              mapRef.current = map;
-              return map;
-            }}
-            className={placementMode ? 'placement-mode-active' : ''}
-          >
-            <MapLayers 
-              activeLayers={activeLayers}
-              userMaps={userMaps}
-              baseLayerId={baseLayerId}
-            />
-            <MapObjects 
-              placementMode={placementMode} 
-              selectedObjectType={selectedObjectType}
-              mapRef={mapRef}
-              onSelect={setSelectedObject} // Передаем функцию для обновления выбранного объекта
-            />
-          </MapContainer>
+        <MapObjects 
+          placementMode={placementMode} 
+          selectedObjectType={selectedObjectType}
+          mapRef={mapRef}
+          onSelect={setSelectedObject}
+        />
+      </MapContainer>
 
-          <InfoPanel 
-            coords={coords} 
-            selectedObject={selectedObject}
-            objects={objects}
-          />
-          
-          {placementMode && (
-            <div style={{
-              position: 'absolute',
-              top: 10,
-              left: 10,
-              zIndex: 1000,
-              background: 'rgba(255, 255, 255, 0.9)',
-              padding: '8px 16px',
-              borderRadius: '4px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
-            }}>
-              <Text strong>Режим размещения: {selectedObjectType}</Text>
-              <br />
-              <Text type="secondary">Кликните на карту для размещения объекта</Text>
-            </div>
-          )}
+      <InfoPanel 
+        coords={coords} 
+        selectedObject={selectedObject}
+        objects={objects}
+      />
+      
+      {placementMode && (
+        <div style={{
+          position: 'absolute',
+          top: 10,
+          left: 320,
+          zIndex: 1000,
+          background: 'rgba(255, 255, 255, 0.9)',
+          padding: '8px 16px',
+          borderRadius: '4px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+        }}>
+          <Text strong>Режим размещения: {selectedObjectType}</Text>
+          <br />
+          <Text type="secondary">Кликните на карту для размещения объекта</Text>
         </div>
-      </div>
+      )}
     </div>
   );
 };
