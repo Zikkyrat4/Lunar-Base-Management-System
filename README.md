@@ -51,7 +51,7 @@
 
 1. Клонируйте репозиторий:
 ```bash
-git clone https://github.com/your-repo/lunar-base.git
+git clone https://github.com/Zikkyrat4/Lunar-Base-Management-System.git
 cd lunar-base
 ```
 2. Установка зависимостей frontend:
