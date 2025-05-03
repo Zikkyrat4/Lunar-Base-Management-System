@@ -14,6 +14,12 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440
     BACKEND_CORS_ORIGINS: List[str] = ["*"]
+
+    GEOSERVER_USER: str = "admin"
+    GEOSERVER_PASSWORD: str = "geoserver"
+    GEOSERVER_DATA_DIR: str = "/opt/geoserver/data_dir"
+    GEOSERVER_UPLOAD_PATH: str = "/opt/geoserver/data_dir/data/lunar"
+    GEOSERVER_DATA_DIR: str = "/opt/geoserver/data_dir"
     
     class Config:
         env_file = ".env"

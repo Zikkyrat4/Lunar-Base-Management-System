@@ -1,4 +1,3 @@
-// src/components/Map/MapView.js
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { 
   MapContainer, TileLayer, LayersControl,
@@ -106,8 +105,6 @@ const MapView = ({ simplified = false }) => {
         setActiveLayers={setActiveLayers}
         userMaps={userMaps}
         setUserMaps={setUserMaps}
-        baseLayerId={baseLayerId}
-        setBaseLayerId={setBaseLayerId}
       />
       
       <MapContainer 
@@ -124,7 +121,6 @@ const MapView = ({ simplified = false }) => {
         <MapLayers 
           activeLayers={activeLayers}
           userMaps={userMaps}
-          baseLayerId={baseLayerId}
         />
         <MapObjects 
           placementMode={placementMode} 

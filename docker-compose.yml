@@ -19,7 +19,7 @@ services:
       retries: 5
 
   geoserver:
-    image: kartoza/geoserver:2.19.0
+    image: kartoza/geoserver:2.24.0
     environment:
       - GEOSERVER_ADMIN_PASSWORD=geoserver
       - GEOSERVER_ADMIN_USER=admin
@@ -29,10 +29,11 @@ services:
       - OPTIMIZE_LINE_WIDTH=false
       - STABLE_EXTENSIONS=all
       - COMMUNITY_EXTENSIONS=all
-      - JAVA_OPTS=-Dlog4j.configuration=file:/opt/geoserver/data_dir/log4j.properties --illegal-access=deny
+      - JAVA_OPTS=-Xms1g -Xmx4g -Dlog4j.configuration=file:/opt/geoserver/data_dir/log4j.properties --illegal-access=deny
     volumes:
       - geoserver_data:/opt/geoserver/data_dir
       - ./geoserver_data_dir:/opt/geoserver/data_dir/workspaces/lunar
+      - ./uploads:/opt/geoserver/data_dir/data/lunar
     ports:
       - "8080:8080"
     networks:
@@ -65,6 +66,9 @@ services:
     environment:
       - DATABASE_URL=postgresql://moon_admin:secure_password@db:5432/moon_base
       - GEOSERVER_URL=http://geoserver:8080/geoserver
+      - GEOSERVER_USER=admin
+      - GEOSERVER_PASSWORD=geoserver
+      - GEOSERVER_WORKSPACE=lunar
       - MINIO_ENDPOINT=minio:9000
       - MINIO_ACCESS_KEY=minioadmin
       - MINIO_SECRET_KEY=minioadmin

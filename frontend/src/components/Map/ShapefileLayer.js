@@ -1,73 +1,37 @@
-import React, { useEffect, useState } from 'react';
+// frontend/src/components/Map/ShapefileLayer.js
+import React, { useEffect, useRef } from 'react';
 import { useMap } from 'react-leaflet';
 import L from 'leaflet';
-import * as shp from 'shpjs';
-import api from '../../api/axios';
 
-const ShapefileLayer = ({ mapData }) => {
+const ShapefileLayer = ({ layerName, opacity = 1 }) => {
   const map = useMap();
-  const [layer, setLayer] = useState(null);
+  const layerRef = useRef(null);
 
   useEffect(() => {
-    if (!mapData || mapData.file_type !== 'shapefile') return;
+    if (!layerName) return;
 
-    const loadShapefile = async () => {
-      try {
-        // Получаем zip архив со всеми файлами Shapefile
-        const response = await api.get(`/maps/shapefile/${mapData.id}`, {
-          responseType: 'arraybuffer'
-        });
-        
-        // Проверяем, что данные получены
-        if (!response.data || response.data.byteLength === 0) {
-          throw new Error('Empty response from server');
-        }
-        
-        // Конвертируем Shapefile в GeoJSON
-        const geojson = await shp.parseZip(response.data);
-        
-        if (!geojson) {
-          throw new Error('Failed to parse Shapefile');
-        }
+    const url = `${process.env.REACT_APP_GEOSERVER_URL}/lunar/wms`;
+    const layer = L.tileLayer.wms(url, {
+      layers: `lunar:${layerName}`,
+      format: 'image/png',
+      transparent: true,
+      version: '1.1.0',
+      attribution: 'GeoServer',
+      opacity: opacity,
+      zIndex: 6
+    });
 
-        // Создаем слой Leaflet
-        const newLayer = L.geoJSON(geojson, {
-          style: {
-            color: '#3388ff',
-            weight: 2,
-            opacity: 1,
-            fillOpacity: 0.2
-          },
-          onEachFeature: (feature, layer) => {
-            if (feature.properties) {
-              const popupContent = Object.entries(feature.properties)
-                .map(([key, value]) => `<strong>${key}:</strong> ${value}`)
-                .join('<br>');
-              layer.bindPopup(popupContent);
-            }
-          }
-        });
-        
-        newLayer.addTo(map);
-        setLayer(newLayer);
-
-      } catch (error) {
-        console.error('Error loading shapefile:', error);
-        // Можно добавить уведомление об ошибке
-      }
-    };
-
-    loadShapefile();
+    layer.addTo(map);
+    layerRef.current = layer;
 
     return () => {
-      if (layer) {
-        map.removeLayer(layer);
-        setLayer(null);
+      if (layerRef.current) {
+        map.removeLayer(layerRef.current);
       }
     };
-  }, [mapData, map]);
+  }, [layerName, map, opacity]);
 
   return null;
 };
 
-export default ShapefileLayer;
+export default React.memo(ShapefileLayer);

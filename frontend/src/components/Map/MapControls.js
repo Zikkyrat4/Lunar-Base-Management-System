@@ -17,25 +17,27 @@ const { TabPane } = Tabs;
 const { Panel } = Collapse;
 
 const LayerControl = ({ layer, onToggle, onChangeOpacity }) => {
+  if (!layer) return null;
+  
   return (
-    <div style={{ display: 'flex', alignItems: 'center', marginBottom: 8 }}>
-      <Checkbox
-        checked={layer.visible}
-        onChange={() => onToggle(layer.id)}
-        style={{ marginRight: 10 }}
-      >
-        {layer.name}
-      </Checkbox>
-      <Slider
-        min={0}
-        max={100}
-        value={layer.opacity}
-        onChange={value => onChangeOpacity(layer.id, value)}
-        disabled={!layer.visible}
-        style={{ width: 100, marginRight: 10 }}
-      />
-      <Tag color={layer.color} style={{ width: 20 }}></Tag>
-    </div>
+      <div style={{ display: 'flex', alignItems: 'center', marginBottom: 8 }}>
+          <Checkbox
+              checked={layer.visible || false}
+              onChange={() => onToggle(layer.id)}
+              style={{ marginRight: 10 }}
+          >
+              {layer.name}
+          </Checkbox>
+          <Slider
+              min={0}
+              max={100}
+              value={layer.opacity || 100}
+              onChange={value => onChangeOpacity(layer.id, value)}
+              disabled={!layer.visible}
+              style={{ width: 100, marginRight: 10 }}
+          />
+          <Tag color={layer.color} style={{ width: 20 }}></Tag>
+      </div>
   );
 };
 
@@ -55,6 +57,8 @@ const MapControls = ({
   const [collapsed, setCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState('1');
   const token = useSelector((state) => state.auth.token);
+
+
 
   const fetchUserMaps = useCallback(async () => {
     try {
@@ -87,13 +91,13 @@ const MapControls = ({
 
   const handleLayerToggle = useCallback((layerId) => {
     setActiveLayers(prev => ({
-      ...prev,
-      [layerId]: {
-        ...prev[layerId],
-        visible: !prev[layerId].visible
-      }
+        ...prev,
+        [layerId]: {
+            ...prev[layerId],
+            visible: !prev[layerId]?.visible
+        }
     }));
-  }, []);
+}, []);
 
   const handleLayerOpacityChange = useCallback((layerId, opacity) => {
     setActiveLayers(prev => ({
