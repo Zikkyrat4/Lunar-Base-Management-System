@@ -16,7 +16,7 @@ import MapObjects from './MapObjects';
 import InfoPanel from './InfoPanel';
 import { useSelector } from 'react-redux';
 
-const { Text } = Typography;
+const { Text, Title } = Typography;
 
 const MapView = ({ simplified = false }) => {
   const [coords, setCoords] = useState({ lat: null, lng: null });
@@ -30,7 +30,8 @@ const MapView = ({ simplified = false }) => {
     resources: { id: 'resources', name: 'Ресурсы', visible: true, opacity: 70, color: '#13c2c2' },
     shadows: { id: 'shadows', name: 'Затенение', visible: false, opacity: 50, color: '#595959' }
   });
-  const [baseLayerId, setBaseLayerId] = useState(null);
+  const [reliefOpacity, setReliefOpacity] = useState(0.7);
+  const [reliefEnabled, setReliefEnabled] = useState(true);
   const mapRef = useRef(null);
   const token = useSelector((state) => state.auth.token);
 
@@ -63,6 +64,14 @@ const MapView = ({ simplified = false }) => {
     };
   }, [mapRef.current]);
 
+  const handleReliefOpacityChange = useCallback((opacity) => {
+    setReliefOpacity(opacity);
+  }, []);
+
+  const handleToggleRelief = useCallback((enabled) => {
+    setReliefEnabled(enabled);
+  }, []);
+
   if (simplified) {
     return (
       <MapContainer 
@@ -86,7 +95,7 @@ const MapView = ({ simplified = false }) => {
           simplified 
           activeLayers={activeLayers}
           userMaps={userMaps}
-          baseLayerId={baseLayerId}
+          reliefOpacity={reliefEnabled ? reliefOpacity : 0}
         />
         <MapObjects simplified />
       </MapContainer>
@@ -105,6 +114,8 @@ const MapView = ({ simplified = false }) => {
         setActiveLayers={setActiveLayers}
         userMaps={userMaps}
         setUserMaps={setUserMaps}
+        onReliefOpacityChange={handleReliefOpacityChange}
+        onToggleRelief={handleToggleRelief}
       />
       
       <MapContainer 
@@ -121,6 +132,7 @@ const MapView = ({ simplified = false }) => {
         <MapLayers 
           activeLayers={activeLayers}
           userMaps={userMaps}
+          reliefOpacity={reliefEnabled ? reliefOpacity : 0}
         />
         <MapObjects 
           placementMode={placementMode} 

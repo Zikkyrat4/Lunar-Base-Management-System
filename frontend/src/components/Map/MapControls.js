@@ -1,12 +1,14 @@
-// src/components/Map/MapControls.js
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { 
-  Tabs, Card, List, Popconfirm, Checkbox, Collapse, Button,
-  Dropdown, Tag, Spin, Alert, Slider, Tooltip, Radio, message
+  Tabs, Card, Slider, Typography, 
+  Button, List, Popconfirm, Checkbox, 
+  Collapse, Alert, Spin, Dropdown, 
+  Tooltip, Radio, message, Tag
 } from 'antd';
 import { 
-  StarFilled, MenuOutlined, CloseOutlined, DeleteOutlined,
-  AppstoreOutlined, LeftOutlined, RightOutlined
+  StarFilled, MenuOutlined, CloseOutlined, 
+  DeleteOutlined, AppstoreOutlined, 
+  LeftOutlined, RightOutlined, ControlOutlined 
 } from '@ant-design/icons';
 import MapUpload from './MapUpload';
 import ObjectPalette from './ObjectPalette';
@@ -15,29 +17,28 @@ import api from '../../api/axios';
 
 const { TabPane } = Tabs;
 const { Panel } = Collapse;
+const { Text } = Typography;
 
 const LayerControl = ({ layer, onToggle, onChangeOpacity }) => {
-  if (!layer) return null;
-  
   return (
-      <div style={{ display: 'flex', alignItems: 'center', marginBottom: 8 }}>
-          <Checkbox
-              checked={layer.visible || false}
-              onChange={() => onToggle(layer.id)}
-              style={{ marginRight: 10 }}
-          >
-              {layer.name}
-          </Checkbox>
-          <Slider
-              min={0}
-              max={100}
-              value={layer.opacity || 100}
-              onChange={value => onChangeOpacity(layer.id, value)}
-              disabled={!layer.visible}
-              style={{ width: 100, marginRight: 10 }}
-          />
-          <Tag color={layer.color} style={{ width: 20 }}></Tag>
-      </div>
+    <div style={{ display: 'flex', alignItems: 'center', marginBottom: 8 }}>
+      <Checkbox
+        checked={layer.visible || false}
+        onChange={() => onToggle(layer.id)}
+        style={{ marginRight: 10 }}
+      >
+        {layer.name}
+      </Checkbox>
+      <Slider
+        min={0}
+        max={100}
+        value={layer.opacity || 100}
+        onChange={value => onChangeOpacity(layer.id, value)}
+        disabled={!layer.visible}
+        style={{ width: 100, marginRight: 10 }}
+      />
+      <Tag color={layer.color} style={{ width: 20 }}></Tag>
+    </div>
   );
 };
 
@@ -50,33 +51,70 @@ const MapControls = ({
   activeLayers,
   setActiveLayers,
   userMaps,
-  setUserMaps
+  setUserMaps,
+  onReliefOpacityChange,
+  onToggleRelief
 }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [collapsed, setCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState('1');
+  const [reliefOpacity, setReliefOpacity] = useState(70);
+  const [reliefEnabled, setReliefEnabled] = useState(true);
   const token = useSelector((state) => state.auth.token);
 
-
-
-  const fetchUserMaps = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await api.get('/maps', {
-        headers: {
-          'Authorization': `Bearer ${token}`
+  // При загрузке карт
+const fetchUserMaps = useCallback(async () => {
+  try {
+    setLoading(true);
+    const response = await api.get('/maps');
+    setUserMaps(response.data);
+    
+    // Инициализация activeLayers с visible: false
+    setActiveLayers(prev => {
+      const newLayers = {...prev};
+      response.data.forEach(map => {
+        if (!prev[map.id]) {
+          newLayers[map.id] = {
+            id: map.id,
+            name: map.name,
+            visible: false, // По умолчанию слой скрыт
+            opacity: 70,
+            color: '#1890ff'
+          };
         }
       });
-      setUserMaps(response.data);
-    } catch (error) {
-      setError('Ошибка загрузки списка карт');
-      console.error('Failed to fetch maps:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, [token]);
+      return newLayers;
+    });
+  } catch (error) {
+    setError('Ошибка загрузки списка карт');
+  } finally {
+    setLoading(false);
+  }
+}, [token]);
+
+  const handleLayerToggle = useCallback((layerId) => {
+    setActiveLayers(prev => ({
+      ...prev,
+      [layerId]: {
+        ...prev[layerId],
+        visible: !prev[layerId]?.visible
+      }
+    }));
+  }, []);
+
+  const handleLayerOpacityChange = useCallback((layerId, value) => {
+    // Убедимся, что value не undefined и находится в пределах 0-100
+    const clampedValue = Math.max(0, Math.min(100, value || 70));
+    
+    setActiveLayers(prev => ({
+      ...prev,
+      [layerId]: {
+        ...prev[layerId],
+        opacity: clampedValue
+      }
+    }));
+  }, []);
 
   const handleDeleteMap = useCallback(async (mapId) => {
     try {
@@ -89,31 +127,16 @@ const MapControls = ({
     }
   }, []);
 
-  const handleLayerToggle = useCallback((layerId) => {
-    setActiveLayers(prev => ({
-        ...prev,
-        [layerId]: {
-            ...prev[layerId],
-            visible: !prev[layerId]?.visible
-        }
-    }));
-}, []);
+  const handleReliefOpacityChange = (value) => {
+    const clampedValue = Math.max(0, Math.min(100, value));
+    setReliefOpacity(clampedValue);
+    onReliefOpacityChange(clampedValue / 100);
+  };
 
-  const handleLayerOpacityChange = useCallback((layerId, opacity) => {
-    setActiveLayers(prev => ({
-      ...prev,
-      [layerId]: {
-        ...prev[layerId],
-        opacity
-      }
-    }));
-  }, []);
-
-  useEffect(() => {
-    if (token) {
-      fetchUserMaps();
-    }
-  }, [token, fetchUserMaps]);
+  const toggleRelief = (checked) => {
+    setReliefEnabled(checked);
+    onToggleRelief(checked);
+  };
 
   if (collapsed) {
     return (
@@ -206,7 +229,7 @@ const MapControls = ({
                     ]}
                   >
                     <List.Item.Meta
-                      title={map.name}
+                      title={map.name || 'Без названия'} // Запасной вариант
                       description={`Тип: ${map.file_type}`}
                     />
                   </List.Item>
@@ -218,8 +241,31 @@ const MapControls = ({
         
         <TabPane tab="Слои" key="3">
           <div style={{ padding: '16px' }}>
-            <Collapse defaultActiveKey={['1']} ghost>
-              <Panel header="Тематические слои" key="1" extra={<AppstoreOutlined />}>
+            <Collapse defaultActiveKey={['1', '2']} ghost>
+              <Panel header="Рельеф" key="1" extra={<ControlOutlined />}>
+                <div style={{ marginBottom: 16 }}>
+                  <Checkbox 
+                    checked={reliefEnabled}
+                    onChange={e => toggleRelief(e.target.checked)}
+                  >
+                    Показать рельеф
+                  </Checkbox>
+                </div>
+                {reliefEnabled && (
+                  <>
+                    <Text>Интенсивность:</Text>
+                    <Slider
+                      min={0}
+                      max={100}
+                      value={reliefOpacity}
+                      onChange={handleReliefOpacityChange}
+                      tooltip={{ formatter: value => `${value}%` }}
+                    />
+                  </>
+                )}
+              </Panel>
+              
+              <Panel header="Тематические слои" key="2" extra={<AppstoreOutlined />}>
                 {Object.values(activeLayers).map(layer => (
                   <LayerControl
                     key={layer.id}
