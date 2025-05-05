@@ -19,7 +19,7 @@ services:
       retries: 5
 
   geoserver:
-    image: kartoza/geoserver:2.24.0
+    image: kartoza/geoserver:2.24.2
     environment:
       - GEOSERVER_ADMIN_PASSWORD=geoserver
       - GEOSERVER_ADMIN_USER=admin
@@ -29,7 +29,9 @@ services:
       - OPTIMIZE_LINE_WIDTH=false
       - STABLE_EXTENSIONS=all
       - COMMUNITY_EXTENSIONS=all
-      - JAVA_OPTS=-Xms1g -Xmx4g -Dlog4j.configuration=file:/opt/geoserver/data_dir/log4j.properties --illegal-access=deny
+      - JAVA_OPTS=-Xms1g -Xmx6g -Dlog4j.configuration=file:/opt/geoserver/data_dir/log4j.properties --illegal-access=deny
+      - ENABLE_CORS=true
+      - CORS_ALLOWED_ORIGINS=*
     volumes:
       - geoserver_data:/opt/geoserver/data_dir
       - ./geoserver_data_dir:/opt/geoserver/data_dir/workspaces/lunar

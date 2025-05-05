@@ -1,0 +1,6 @@
+<gwcConfiguration xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://www.geo-solutions.it/gwc/schema/1.3.0/schema.xsd">
+  <version>1.3.0</version>
+  <defaultCachingGridSet>EPSG:4326</defaultCachingGridSet>
+</gwcConfiguration>

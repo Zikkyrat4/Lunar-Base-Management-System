@@ -1,4 +1,3 @@
-// frontend/src/components/Map/GeoTIFFLayer.js
 import React, { useEffect, useRef } from 'react';
 import { useMap } from 'react-leaflet';
 import L from 'leaflet';
@@ -11,6 +10,7 @@ const GeoTIFFLayer = ({ layerName, opacity = 1 }) => {
     if (!layerName) return;
 
     const url = `${process.env.REACT_APP_GEOSERVER_URL}/lunar/wms`;
+    
     const layer = L.tileLayer.wms(url, {
       layers: `lunar:${layerName}`,
       format: 'image/png',
@@ -18,6 +18,7 @@ const GeoTIFFLayer = ({ layerName, opacity = 1 }) => {
       version: '1.1.0',
       attribution: 'GeoServer',
       opacity: opacity,
+      srs: 'EPSG:4326', 
       zIndex: 5
     });
 
