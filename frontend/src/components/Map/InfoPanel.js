@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Card, Descriptions, Button, Typography, Divider, Progress, Dropdown } from 'antd';
-import { PrinterOutlined, ExportOutlined, DownloadOutlined } from '@ant-design/icons';
+import { Card, Descriptions, Button, Typography, Divider, Progress, Dropdown, Collapse } from 'antd';
+import { PrinterOutlined, ExportOutlined, DownloadOutlined, UpOutlined, DownOutlined } from '@ant-design/icons';
 import { message } from 'antd';
 import * as MapUtils from './MapUtils';
 
 const { Text, Title } = Typography;
+const { Panel } = Collapse;
 
 const InfoPanel = ({ 
   coords, 
@@ -12,6 +13,7 @@ const InfoPanel = ({
   objects = []
 }) => {
   const [exportFormat, setExportFormat] = useState('png');
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [extendedInfo] = useState({
     gravity: 1.62,
     solar_activity: 45,
@@ -48,76 +50,106 @@ const InfoPanel = ({
     handleExport(key);
   };
 
+  const toggleCollapse = () => {
+    setIsCollapsed(!isCollapsed);
+  };
+
   return (
     <Card 
-      title="Информация о местности" 
       className="info-panel"
       style={{ 
-        width: 320,
+        width: 280,
         position: 'absolute',
         bottom: 20,
         right: 20,
-        zIndex: 1000
+        zIndex: 1000,
+        borderRadius: '8px',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+      }}
+      bodyStyle={{ 
+        padding: isCollapsed ? '0' : '12px',
+        transition: 'all 0.3s'
       }}
     >
-      <Descriptions column={1} size="small">
-        <Descriptions.Item label="Широта">
-          <Text copyable>{coords?.lat || 'Не определено'}</Text>
-        </Descriptions.Item>
-        <Descriptions.Item label="Долгота">
-          <Text copyable>{coords?.lng || 'Не определено'}</Text>
-        </Descriptions.Item>
-        <Descriptions.Item label="Высота">1,240 м</Descriptions.Item>
-        <Descriptions.Item label="Температура">
-          {extendedInfo.temperature}°C
-        </Descriptions.Item>
-        <Descriptions.Item label="Зона">
-          {getZoneInfo(coords) || 'Не определено'}
-        </Descriptions.Item>
-        <Descriptions.Item label="Выбранный объект">
-          {selectedObject || 'Не выбран'}
-        </Descriptions.Item>
-      </Descriptions>
-
-      <Divider orientation="left">Дополнительно</Divider>
-      
-      <Descriptions column={1} size="small">
-        <Descriptions.Item label="Гравитация">
-          {extendedInfo.gravity} м/с²
-        </Descriptions.Item>
-        <Descriptions.Item label="Солнечная активность">
-          <Progress 
-            percent={extendedInfo.solar_activity} 
-            status="active" 
-            size="small" 
-          />
-        </Descriptions.Item>
-        <Descriptions.Item label="Последнее обновление">
-          {extendedInfo.last_update.toLocaleTimeString()}
-        </Descriptions.Item>
-      </Descriptions>
-
-      <div style={{ marginTop: 16, display: 'flex', gap: 8 }}>
-        <Button 
-          icon={<PrinterOutlined />} 
-          onClick={handlePrint}
-          block
-        >
-          Печать
-        </Button>
-        <Dropdown.Button
-          icon={<ExportOutlined />}
-          onClick={() => handleExport()}
-          menu={{
-            items: exportMenuItems,
-            onClick: handleExportFormatChange,
-            selectedKeys: [exportFormat]
-          }}
-          block
-        >
-          Экспорт
-        </Dropdown.Button>
+      <div 
+        style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          cursor: 'pointer',
+          padding: isCollapsed ? '8px 12px' : '0 0 8px 0'
+        }}
+        onClick={toggleCollapse}
+      >
+        <Text strong>Информация о местности</Text>
+        {isCollapsed ? <DownOutlined /> : <UpOutlined />}
       </div>
+
+      <Collapse activeKey={isCollapsed ? [] : ['1']} ghost>
+        <Panel key="1" showArrow={false} style={{ padding: 0 }}>
+          <Descriptions column={1} size="small" style={{ marginBottom: 0 }}>
+            <Descriptions.Item label="Широта">
+              <Text copyable>{coords?.lat || 'Не определено'}</Text>
+            </Descriptions.Item>
+            <Descriptions.Item label="Долгота">
+              <Text copyable>{coords?.lng || 'Не определено'}</Text>
+            </Descriptions.Item>
+            <Descriptions.Item label="Высота">1,240 м</Descriptions.Item>
+            <Descriptions.Item label="Температура">
+              {extendedInfo.temperature}°C
+            </Descriptions.Item>
+            <Descriptions.Item label="Зона">
+              {getZoneInfo(coords) || 'Не определено'}
+            </Descriptions.Item>
+            <Descriptions.Item label="Выбранный объект">
+              {selectedObject || 'Не выбран'}
+            </Descriptions.Item>
+          </Descriptions>
+
+          <Divider orientation="left" style={{ margin: '8px 0' }}>Дополнительно</Divider>
+          
+          <Descriptions column={1} size="small" style={{ marginBottom: 12 }}>
+            <Descriptions.Item label="Гравитация">
+              {extendedInfo.gravity} м/с²
+            </Descriptions.Item>
+            <Descriptions.Item label="Солнечная активность">
+              <Progress 
+                percent={extendedInfo.solar_activity} 
+                status="active" 
+                size="small" 
+                style={{ marginTop: 4 }}
+              />
+            </Descriptions.Item>
+            <Descriptions.Item label="Последнее обновление">
+              {extendedInfo.last_update.toLocaleTimeString()}
+            </Descriptions.Item>
+          </Descriptions>
+
+          <div style={{ display: 'flex', gap: 8 }}>
+            <Button 
+              icon={<PrinterOutlined />} 
+              onClick={handlePrint}
+              block
+              size="small"
+            >
+              Печать
+            </Button>
+            <Dropdown.Button
+              icon={<ExportOutlined />}
+              onClick={() => handleExport()}
+              menu={{
+                items: exportMenuItems,
+                onClick: handleExportFormatChange,
+                selectedKeys: [exportFormat]
+              }}
+              block
+              size="small"
+            >
+              Экспорт
+            </Dropdown.Button>
+          </div>
+        </Panel>
+      </Collapse>
     </Card>
   );
 };

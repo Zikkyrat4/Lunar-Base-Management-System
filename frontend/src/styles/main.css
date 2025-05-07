@@ -372,34 +372,32 @@ body {
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
-/* Добавим в конец файла */
-.ant-popover-title {
-  padding: 12px 16px;
-  font-weight: 600;
+.info-panel {
+  transition: all 0.3s ease;
 }
 
-.ant-popover-inner-content {
+.info-panel .ant-descriptions-item-label {
+  font-size: 12px;
+}
+
+.info-panel .ant-descriptions-item-content {
+  font-size: 12px;
+}
+
+.info-panel .ant-divider {
+  margin: 8px 0;
+}
+
+.info-panel .ant-collapse-content-box {
   padding: 0 !important;
 }
 
-/* Стили для компактного интерфейса */
-.ant-btn-circle {
-  min-width: 40px;
-  min-height: 40px;
+.info-panel .ant-progress-line {
+  margin-top: 4px;
+  margin-bottom: 4px;
 }
 
-.ant-btn-icon-only {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Анимация для кнопки */
-.map-control-button {
-  transition: all 0.3s;
-}
-
-.map-control-button:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 10px rgba(106, 13, 173, 0.5);
+.info-panel .ant-btn-sm {
+  height: 28px;
+  font-size: 12px;
 }
