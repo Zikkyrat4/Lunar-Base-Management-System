@@ -1,22 +1,24 @@
 import React, { useState, useCallback } from 'react';
 import { 
-  Tabs, Card, Slider, Typography, 
-  Button, List, Popconfirm, Checkbox, 
-  Collapse, Alert, Spin, Dropdown, 
-  Tooltip, Radio, message, Tag
+  Button, Slider, Typography, 
+  Popconfirm, Checkbox, 
+  Alert, Spin, Dropdown, 
+  Tooltip, Radio, message, Tag,
+  Popover, Space, Divider
 } from 'antd';
 import { 
-  StarFilled, MenuOutlined, CloseOutlined, 
+  MenuOutlined, CloseOutlined, 
   DeleteOutlined, AppstoreOutlined, 
-  LeftOutlined, RightOutlined, ControlOutlined 
+  ControlOutlined, PlusOutlined,
+  EyeOutlined, EyeInvisibleOutlined,
+  UploadOutlined, DownloadOutlined,
+  SettingOutlined
 } from '@ant-design/icons';
 import MapUpload from './MapUpload';
 import ObjectPalette from './ObjectPalette';
 import { useSelector } from 'react-redux';
 import api from '../../api/axios';
 
-const { TabPane } = Tabs;
-const { Panel } = Collapse;
 const { Text } = Typography;
 
 const LayerControl = ({ layer, onToggle, onChangeOpacity }) => {
@@ -57,41 +59,39 @@ const MapControls = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [collapsed, setCollapsed] = useState(false);
-  const [activeTab, setActiveTab] = useState('1');
+  const [open, setOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('objects');
   const [reliefOpacity, setReliefOpacity] = useState(70);
   const [reliefEnabled, setReliefEnabled] = useState(true);
   const token = useSelector((state) => state.auth.token);
 
-  // При загрузке карт
-const fetchUserMaps = useCallback(async () => {
-  try {
-    setLoading(true);
-    const response = await api.get('/maps');
-    setUserMaps(response.data);
-    
-    // Инициализация activeLayers с visible: false
-    setActiveLayers(prev => {
-      const newLayers = {...prev};
-      response.data.forEach(map => {
-        if (!prev[map.id]) {
-          newLayers[map.id] = {
-            id: map.id,
-            name: map.name,
-            visible: false, // По умолчанию слой скрыт
-            opacity: 70,
-            color: '#1890ff'
-          };
-        }
+  const fetchUserMaps = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await api.get('/maps');
+      setUserMaps(response.data);
+      
+      setActiveLayers(prev => {
+        const newLayers = {...prev};
+        response.data.forEach(map => {
+          if (!prev[map.id]) {
+            newLayers[map.id] = {
+              id: map.id,
+              name: map.name,
+              visible: false,
+              opacity: 70,
+              color: '#1890ff'
+            };
+          }
+        });
+        return newLayers;
       });
-      return newLayers;
-    });
-  } catch (error) {
-    setError('Ошибка загрузки списка карт');
-  } finally {
-    setLoading(false);
-  }
-}, [token]);
+    } catch (error) {
+      setError('Ошибка загрузки списка карт');
+    } finally {
+      setLoading(false);
+    }
+  }, [token]);
 
   const handleLayerToggle = useCallback((layerId) => {
     setActiveLayers(prev => ({
@@ -104,9 +104,7 @@ const fetchUserMaps = useCallback(async () => {
   }, []);
 
   const handleLayerOpacityChange = useCallback((layerId, value) => {
-    // Убедимся, что value не undefined и находится в пределах 0-100
     const clampedValue = Math.max(0, Math.min(100, value || 70));
-    
     setActiveLayers(prev => ({
       ...prev,
       [layerId]: {
@@ -138,148 +136,170 @@ const fetchUserMaps = useCallback(async () => {
     onToggleRelief(checked);
   };
 
-  if (collapsed) {
-    return (
-      <Button 
-        type="primary" 
-        icon={<RightOutlined />}
-        onClick={() => setCollapsed(false)}
-        style={{
-          position: 'absolute',
-          top: 50,
-          left: 10,
-          zIndex: 1000
-        }}
-      />
-    );
-  }
+  const content = (
+    <div style={{ width: 280, padding: '8px 0' }}>
+      <div style={{ display: 'flex', marginBottom: 8 }}>
+        <Button 
+          type={activeTab === 'objects' ? 'primary' : 'default'} 
+          onClick={() => setActiveTab('objects')}
+          icon={<PlusOutlined />}
+          style={{ flex: 1, marginRight: 4 }}
+        >
+          Объекты
+        </Button>
+        <Button 
+          type={activeTab === 'maps' ? 'primary' : 'default'} 
+          onClick={() => setActiveTab('maps')}
+          icon={<UploadOutlined />}
+          style={{ flex: 1, marginRight: 4 }}
+        >
+          Карты
+        </Button>
+        <Button 
+          type={activeTab === 'layers' ? 'primary' : 'default'} 
+          onClick={() => setActiveTab('layers')}
+          icon={<AppstoreOutlined />}
+          style={{ flex: 1 }}
+        >
+          Слои
+        </Button>
+      </div>
+
+      <Divider style={{ margin: '8px 0' }} />
+
+      {activeTab === 'objects' && (
+        <div style={{ padding: '0 8px' }}>
+          <ObjectPalette 
+            onSelectObject={(obj) => {
+              setSelectedObjectType(obj.type);
+              setPlacementMode(true);
+              setOpen(false);
+            }}
+            selectedType={placementMode ? selectedObjectType : null}
+          />
+          {placementMode && (
+            <Button 
+              danger
+              icon={<CloseOutlined />}
+              onClick={() => setPlacementMode(false)}
+              style={{ marginTop: '8px', width: '100%' }}
+            >
+              Отменить размещение
+            </Button>
+          )}
+        </div>
+      )}
+      
+      {activeTab === 'maps' && (
+        <div style={{ padding: '0 8px' }}>
+          <MapUpload onUploadSuccess={fetchUserMaps} />
+          
+          {loading ? (
+            <Spin size="small" tip="Загрузка..." />
+          ) : error ? (
+            <Alert message={error} type="error" showIcon size="small" />
+          ) : (
+            <div style={{ maxHeight: 300, overflowY: 'auto' }}>
+              {userMaps.map(map => (
+                <div key={map.id} style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  padding: '4px 0',
+                  borderBottom: '1px solid #f0f0f0'
+                }}>
+                  <Checkbox
+                    checked={activeLayers[map.id]?.visible || false}
+                    onChange={() => handleLayerToggle(map.id)}
+                    style={{ marginRight: 8 }}
+                  />
+                  <Text ellipsis style={{ flex: 1 }}>{map.name || 'Без названия'}</Text>
+                  <Popconfirm
+                    title="Удалить карту?"
+                    onConfirm={() => handleDeleteMap(map.id)}
+                    okText="Да"
+                    cancelText="Нет"
+                  >
+                    <Button 
+                      danger 
+                      icon={<DeleteOutlined />} 
+                      size="small" 
+                      type="text"
+                    />
+                  </Popconfirm>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+      
+      {activeTab === 'layers' && (
+        <div style={{ padding: '0 8px' }}>
+          <div style={{ marginBottom: 12 }}>
+            <Checkbox 
+              checked={reliefEnabled}
+              onChange={e => toggleRelief(e.target.checked)}
+            >
+              Показать рельеф
+            </Checkbox>
+            {reliefEnabled && (
+              <div style={{ marginLeft: 24 }}>
+                <Text>Интенсивность:</Text>
+                <Slider
+                  min={0}
+                  max={100}
+                  value={reliefOpacity}
+                  onChange={handleReliefOpacityChange}
+                  tooltip={{ formatter: value => `${value}%` }}
+                />
+              </div>
+            )}
+          </div>
+          
+          <Text strong>Тематические слои:</Text>
+          <div style={{ maxHeight: 200, overflowY: 'auto' }}>
+            {Object.values(activeLayers).map(layer => (
+              <LayerControl
+                key={layer.id}
+                layer={layer}
+                onToggle={handleLayerToggle}
+                onChangeOpacity={handleLayerOpacityChange}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 
   return (
-    <Card 
-      style={{ 
-        width: '300px',
-        position: 'absolute',
-        top: 50,
-        left: 10,
-        zIndex: 1000
-      }}
-      bodyStyle={{ padding: 0 }}
-      extra={
-        <Button 
-          type="text" 
-          icon={<LeftOutlined />} 
-          onClick={() => setCollapsed(true)}
-        />
-      }
+    <Popover
+      content={content}
+      title="Управление картой"
+      trigger="click"
+      open={open}
+      onOpenChange={setOpen}
+      placement="rightTop"
+      overlayStyle={{ width: 320 }}
     >
-      <Tabs 
-        defaultActiveKey="1" 
-        activeKey={activeTab}
-        onChange={setActiveTab}
-        tabBarStyle={{ marginBottom: 0 }}
-      >
-        <TabPane tab="Объекты" key="1">
-          <div style={{ padding: '16px' }}>
-            <ObjectPalette 
-              onSelectObject={(obj) => {
-                setSelectedObjectType(obj.type);
-                setPlacementMode(true);
-              }}
-              selectedType={placementMode ? selectedObjectType : null}
-            />
-            {placementMode && (
-              <Button 
-                danger
-                icon={<CloseOutlined />}
-                onClick={() => setPlacementMode(false)}
-                style={{ marginTop: '16px', width: '100%' }}
-              >
-                Отменить размещение
-              </Button>
-            )}
-          </div>
-        </TabPane>
-        
-        <TabPane tab="Карты" key="2">
-          <div style={{ padding: '16px' }}>
-            <MapUpload onUploadSuccess={fetchUserMaps} />
-            
-            {loading ? (
-              <Spin size="large" tip="Загрузка..." />
-            ) : error ? (
-              <Alert message={error} type="error" showIcon />
-            ) : (
-              <List
-                dataSource={userMaps}
-                renderItem={map => (
-                  <List.Item
-                    actions={[
-                      <Checkbox
-                        checked={activeLayers[map.id]?.visible || false}
-                        onChange={() => handleLayerToggle(map.id)}
-                      />,
-                      <Popconfirm
-                        title="Удалить карту?"
-                        onConfirm={() => handleDeleteMap(map.id)}
-                        okText="Да"
-                        cancelText="Нет"
-                      >
-                        <Button danger icon={<DeleteOutlined />} size="small" />
-                      </Popconfirm>
-                    ]}
-                  >
-                    <List.Item.Meta
-                      title={map.name || 'Без названия'} // Запасной вариант
-                      description={`Тип: ${map.file_type}`}
-                    />
-                  </List.Item>
-                )}
-              />
-            )}
-          </div>
-        </TabPane>
-        
-        <TabPane tab="Слои" key="3">
-          <div style={{ padding: '16px' }}>
-            <Collapse defaultActiveKey={['1', '2']} ghost>
-              <Panel header="Рельеф" key="1" extra={<ControlOutlined />}>
-                <div style={{ marginBottom: 16 }}>
-                  <Checkbox 
-                    checked={reliefEnabled}
-                    onChange={e => toggleRelief(e.target.checked)}
-                  >
-                    Показать рельеф
-                  </Checkbox>
-                </div>
-                {reliefEnabled && (
-                  <>
-                    <Text>Интенсивность:</Text>
-                    <Slider
-                      min={0}
-                      max={100}
-                      value={reliefOpacity}
-                      onChange={handleReliefOpacityChange}
-                      tooltip={{ formatter: value => `${value}%` }}
-                    />
-                  </>
-                )}
-              </Panel>
-              
-              <Panel header="Тематические слои" key="2" extra={<AppstoreOutlined />}>
-                {Object.values(activeLayers).map(layer => (
-                  <LayerControl
-                    key={layer.id}
-                    layer={layer}
-                    onToggle={handleLayerToggle}
-                    onChangeOpacity={handleLayerOpacityChange}
-                  />
-                ))}
-              </Panel>
-            </Collapse>
-          </div>
-        </TabPane>
-      </Tabs>
-    </Card>
+      <Button 
+        type="primary" 
+        icon={<SettingOutlined />}
+        style={{
+          position: 'absolute',
+          top: 70,
+          left: 10,
+          zIndex: 1000,
+          width: 40,
+          height: 40,
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+        }}
+      />
+    </Popover>
   );
 };
 

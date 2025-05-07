@@ -20,20 +20,25 @@ const objectTypes = [
 
 const ObjectPalette = ({ onSelectObject, selectedType }) => {
   return (
-    <div className="object-palette">
-      <Row gutter={[16, 16]}>
-        {objectTypes.map((obj, index) => (
+    <div className="object-palette" style={{ padding: 8 }}>
+      <Row gutter={[8, 8]}>
+        {objectTypes.map((obj) => (
           <Col span={12} key={obj.type}>
             <Tooltip title={obj.name}>
               <div 
                 className={`object-item ${selectedType === obj.type ? 'selected' : ''}`}
                 onClick={() => onSelectObject(obj)}
-                style={{ borderColor: obj.color }}
+                style={{ 
+                  borderColor: obj.color,
+                  padding: '8px 4px'
+                }}
               >
                 <div className="object-icon" style={{ color: obj.color }}>
-                  {React.cloneElement(obj.icon, { style: { fontSize: '24px' } })}
+                  {React.cloneElement(obj.icon, { style: { fontSize: '20px' } })}
                 </div>
-                <div className="object-name">{obj.name}</div>
+                <div className="object-name" style={{ fontSize: 12 }}>
+                  {obj.name}
+                </div>
               </div>
             </Tooltip>
           </Col>

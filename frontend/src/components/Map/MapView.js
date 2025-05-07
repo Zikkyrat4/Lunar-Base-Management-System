@@ -127,6 +127,7 @@ const MapView = ({ simplified = false }) => {
           mapRef.current = map;
           return map;
         }}
+        zoomControl={false}
         className={placementMode ? 'placement-mode-active' : ''}
       >
         <MapLayers 
