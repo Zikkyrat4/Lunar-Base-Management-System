@@ -28,7 +28,8 @@
         "shpjs": "^6.1.0",
         "html2canvas": "^1.4.1",
         "react-responsive": "^9.0.2",
-        "leaflet-measure": "^1.2.0"
+        "leaflet-measure": "^1.2.0",
+        "react-icons": "^5.5.0"
     },
     "scripts": {
         "start": "react-scripts start",

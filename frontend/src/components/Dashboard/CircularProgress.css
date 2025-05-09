@@ -1,0 +1,105 @@
+.progress-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 50px;
+  z-index: 3; /* поверх фона */
+  position: relative;
+}
+
+.circular-progress-container {
+  position: relative;
+  flex: 0 0 auto;
+  margin: 20px;
+}
+
+/* Поднимаем 1-й и 4-й круг */
+.circular-progress-container:nth-child(1),
+.circular-progress-container:nth-child(4) {
+  transform: translateY(80px);
+}
+
+.progress-svg {
+  width: 180px;
+  height: 180px;
+}
+
+.progress-bg {
+  fill: none;
+  stroke: #2d2d2d;
+  stroke-width: 12;
+}
+
+.progress-text-group {
+  fill: white;
+  font-family: 'Orbitron', sans-serif;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.progress-percent {
+  font-size: 24px; /* Было 40px */
+  font-weight: bold;
+}
+
+.progress-title-inside {
+  font-size: 12px; /* Было 14px */
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  white-space: pre-line;
+}
+/* Базовые стили для мобильных */
+@media screen and (max-width: 768px) {
+  .progress-wrapper {
+    gap: 20px;
+    margin-top: 30px;
+  }
+
+  .circular-progress-container {
+    margin: 10px;
+    flex: 0 0 80px; /* Фиксируем ширину для мобильных */
+  }
+
+  /* Уменьшаем смещение */
+  .circular-progress-container:nth-child(1),
+  .circular-progress-container:nth-child(4) {
+    transform: translateY(40px);
+  }
+
+  /* Адаптируем размер SVG */
+  .progress-svg {
+    width: 120px;
+    height: 120px;
+  }
+
+  /* Корректируем размеры текста */
+  .progress-percent {
+    font-size: 18px;
+  }
+
+  .progress-title-inside {
+    font-size: 10px;
+  }
+}
+
+/* Для очень маленьких экранов */
+@media screen and (max-width: 480px) {
+  .progress-wrapper {
+    gap: 15px;
+    margin-top: 20px;
+  }
+
+  .progress-svg {
+    width: 100px;
+    height: 100px;
+  }
+
+  .progress-percent {
+    font-size: 16px;
+  }
+
+  .progress-title-inside {
+    font-size: 9px;
+  }
+}

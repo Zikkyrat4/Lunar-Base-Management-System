@@ -286,8 +286,8 @@ const MapControls = ({
         type="primary" 
         icon={<SettingOutlined />}
         style={{
-          position: 'absolute',
-          top: 70,
+          position: 'fixed',
+          top: 80,
           left: 10,
           zIndex: 1000,
           width: 40,
@@ -296,7 +296,10 @@ const MapControls = ({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+          boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+          backgroundColor: 'rgba(10, 10, 20, 0.85)',
+          backdropFilter: 'blur(5px)',
+          border: '1px solid rgba(255, 255, 255, 0.1)'
         }}
       />
     </Popover>

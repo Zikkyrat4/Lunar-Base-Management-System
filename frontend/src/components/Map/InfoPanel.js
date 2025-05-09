@@ -59,12 +59,15 @@ const InfoPanel = ({
       className="info-panel"
       style={{ 
         width: 280,
-        position: 'absolute',
+        position: 'fixed',
         bottom: 20,
         right: 20,
         zIndex: 1000,
         borderRadius: '8px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+        boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+        backgroundColor: 'rgba(10, 10, 20, 0.85)', 
+        backdropFilter: 'blur(5px)',
+        border: '1px solid rgba(255, 255, 255, 0.1)'
       }}
       bodyStyle={{ 
         padding: isCollapsed ? '0' : '12px',

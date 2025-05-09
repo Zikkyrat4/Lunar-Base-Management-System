@@ -1,0 +1,50 @@
+/* ==================================================== */
+/* Основной контейнер герой-секции */
+/* ==================================================== */
+.dashboard-hero {
+  position: relative;
+  min-height: 100dvh;
+  width: 100%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  font-family: 'Orbitron', sans-serif;
+}
+
+/* ==================================================== */
+/* Стили для контентной области */
+/* ==================================================== */
+.dashboard-content {
+  position: relative;
+  z-index: 3;
+  max-width: 1200px;
+  padding: 20px;
+  text-align: center;
+  margin: 0 auto;
+}
+
+/* ==================================================== */
+/* Контейнер для прогресс-баров */
+/* ==================================================== */
+.progress-bars-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 60px;
+  margin: 0px 0;
+}
+
+/* ==================================================== */
+/* Адаптивные стили */
+/* ==================================================== */
+@media (max-width: 768px) {
+  .progress-bars-container {
+    gap: 15px;
+  }
+  
+  .ant-typography {
+    font-size: 1rem !important;
+  }
+}

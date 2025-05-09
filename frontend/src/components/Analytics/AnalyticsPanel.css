@@ -1,0 +1,404 @@
+/* AnalyticsPanel.css */
+:root {
+    --panel-bg: #17103fee;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --card-hover-bg: rgba(255, 255, 255, 0.1);
+    --card-border: rgba(255, 255, 255, 0.1);
+    --accent: #3B82F6;
+    --accent-hover: #2563EB;
+    --accent-light: #93C5FD;
+    --accent-dark: #1D4ED8;
+    --text: #F3F4F6;
+    --text-muted: #9CA3AF;
+    --text-strong: #F9FAFB;
+    --muted-dark: #6B7280;
+    --light: #FFFFFF;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+    --radius-lg: 1rem;
+    --radius-xl: 1.25rem;
+    --radius-full: 9999px;
+    --transition: 0.3s ease;
+  }
+  
+  .analytics-panel {
+    position: relative;
+    z-index: 1;
+    padding: 2.5rem;
+    background: var(--panel-bg);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+    max-width:1200px;
+    margin: auto;
+    transition: all var(--transition);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .analytics-panel:focus-within {
+    outline: 2px dashed var(--accent);
+    outline-offset: -2px;
+  }
+  
+  h2, h3 {
+    margin-bottom: 1.5rem;
+    color: var(--text);
+    font-weight: 700;
+    font-size: 1.8rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+  }
+  
+  h2::after, h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: var(--accent);
+    border-radius: var(--radius-full);
+    transition: transform 0.3s ease;
+  }
+  
+  h2:hover::after, h3:hover::after {
+    transform: scaleX(1.1);
+  }
+  
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .metric {
+    display: flex;
+    align-items: center;
+    background: var(--card-bg);
+    border-radius: var(--radius-xl);
+    padding: 1.5rem 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all var(--transition);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(8px);
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+  }
+  
+  .metric:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+  }
+  
+  .metric:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    background: var(--card-hover-bg);
+  }
+  
+  .metric::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -50%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(
+      120deg,
+      rgba(255, 255, 255, 0.03) 0%,
+      rgba(255, 255, 255, 0.08) 50%,
+      rgba(255, 255, 255, 0.03) 100%
+    );
+    transform: skewX(-20deg);
+    transition: transform 0.5s ease;
+  }
+  
+  .metric:hover::before {
+    transform: skewX(-20deg) translateX(100%);
+  }
+  
+  .metric-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 1160 px;
+    z-index: 1;
+  }
+  
+  .metric-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .metric-label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+  }
+  
+  .metric-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-strong);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  
+  .metric-unit {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    opacity: 0.8;
+  }
+  
+  .metric-icon {
+    font-size: 2.5rem;
+    color: var(--accent);
+    transition: transform var(--transition), color var(--transition);
+  }
+  
+  .metric:hover .metric-icon {
+    transform: scale(1.1) rotate(5deg);
+    color: var(--accent-hover);
+  }
+  
+  .bar {
+    margin-top: 1rem;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .bar-fill {
+    background: linear-gradient(90deg, var(--accent), var(--accent-light));
+    height: 100%;
+    border-radius: var(--radius-full);
+    transition: width 0.8s ease-out;
+    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.2);
+  }
+  
+/* Прогноз погоды */
+.forecast-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+    perspective: 1000px;
+  }
+  
+  .forecast-card {
+    background: #ffffff0d;
+    padding: 1.5rem;
+    border-radius: var(--radius-xl);
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    transition: all var(--transition) ease-in-out;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    cursor: default;
+  }
+  
+  .forecast-card:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: -4px;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+    transform: translateY(-6px) scale(1.02) rotateX(2deg);
+  }
+  
+  .forecast-card:hover {
+    transform: translateY(-8px) scale(1.02) rotateX(3deg);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  }
+  
+  /* Эффект параллакса для иконок */
+  .forecast-card:hover .forecast-icon {
+    transform: scale(1.1) translateY(-4px);
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+  }
+  
+  /* Фоновые эффекты для разных типов погоды */
+  .forecast-card.sunny::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(253,186,116,0.1) 0%, transparent 70%);
+    animation: sunRotate 20s linear infinite;
+    z-index: 0;
+    pointer-events: none;
+  }
+  
+  @keyframes sunRotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .forecast-card.rainy::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1160px;
+    height: 100%;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(147,197,253,0.1) 10px,
+      rgba(147,197,253,0.1) 20px
+    );
+    z-index: 0;
+    pointer-events: none;
+  }
+  
+  .forecast-card.cloudy::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1160px;
+    height: 100%;
+    background: 
+      radial-gradient(circle at 20% 30%, rgba(255,255,255,0.3) 0%, transparent 60%),
+      radial-gradient(circle at 80% 40%, rgba(255,255,255,0.2) 0%, transparent 60%),
+      radial-gradient(circle at 50% 70%, rgba(255,255,255,0.15) 0%, transparent 60%);
+    z-index: 0;
+    pointer-events: none;
+  }
+  
+  .forecast-card.warning::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1160 px;
+    height: 100%;
+    background: linear-gradient(45deg, rgba(248,100,70,0.05) 0%, rgba(248,100,70,0.15) 100%);
+    z-index: 0;
+    pointer-events: none;
+  }
+  
+  .forecast-temp {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    margin-bottom: 0.8rem;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .forecast-temp strong {
+    font-size: 2.2rem;
+    color: var(--text-strong);
+    position: relative;
+  }
+  
+  .forecast-temp::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 2px;
+    background: var(--accent);
+    border-radius: var(--radius-full);
+    opacity: 0;
+    transition: opacity var(--transition);
+    z-index: 0;
+  }
+  
+  .forecast-card:hover .forecast-temp::after {
+    opacity: 0.6;
+  }
+  
+  .forecast-unit {
+    font-size: 1rem;
+    color: var(--text-muted);
+    opacity: 0.9;
+    font-weight: 500;
+  }
+  
+  .forecast-date {
+    font-size: 1rem;
+    color: var(--muted-dark);
+    margin-top: 0.5rem;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .forecast-icon {
+    font-size: 2.8rem;
+    margin-top: 1rem;
+    color: var(--accent);
+    transition: all var(--transition) ease;
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .forecast-icon svg {
+    transition: transform var(--transition) ease;
+  }
+  
+  .forecast-card:hover .forecast-icon svg {
+    transform: rotate(15deg);
+  }
+  
+  /* Адаптивные улучшения */
+  @media (max-width: 768px) {
+    .analytics-panel {
+      padding: 1.8rem;
+      margin: 0.8rem;
+    }
+    
+    h2, h3 {
+      font-size: 1.5rem;
+    }
+    
+    .metrics-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .analytics-panel {
+      padding: 1.4rem;
+    }
+    
+    .metrics-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .metric {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 1.2rem;
+    }
+    
+    .metric-icon {
+      align-self: center;
+      margin-top: 0.8rem;
+      margin-left: 0;
+    }
+    
+    .forecast-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
