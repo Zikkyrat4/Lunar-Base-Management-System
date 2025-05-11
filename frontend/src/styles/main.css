@@ -497,12 +497,14 @@ body::before {
 }
 
 .info-panel .ant-descriptions-item-label {
-  font-size: 12px;
+  font-size: 14px;
+  color: #dcdcdc;
   color: rgba(255, 255, 255, 0.7) !important;
 }
 
 .info-panel .ant-descriptions-item-content {
-  font-size: 12px;
+  font-size: 14px;
+  color: #ffffff;
   color: white !important;
 }
 
