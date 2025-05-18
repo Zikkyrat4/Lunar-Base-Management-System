@@ -13,8 +13,11 @@ RUN npm ci --legacy-peer-deps
 COPY . .
 
 # 4. Устанавливаем переменные окружения
-ARG REACT_APP_GEOSERVER_URL=http://localhost:8080/geoserver
+ARG REACT_APP_GEOSERVER_URL=http://81.94.156.229:8080/geoserver
+ARG REACT_APP_API_URL=http://81.94.156.229:8000/api/v1
+ENV REACT_APP_API_URL=$REACT_APP_API_URL
 ENV REACT_APP_GEOSERVER_URL=$REACT_APP_GEOSERVER_URL
+
 
 # 5. Собираем приложение
 RUN npm run build

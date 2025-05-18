@@ -91,9 +91,11 @@ function MetricCard({ label, value, unit, type, icon }) {
 }
 
 function ForecastCard({ temperature, date, icon }) {
-  // Разделение температуры на значение и единицу
-  const [tempValue, tempUnit] = temperature.split(/(?=\D+$)/);
-  
+  // Разделение температуры на значение и единицу (включая °C)
+  const match = temperature.match(/^([\d.]+)(.*)$/);
+  const tempValue = match ? match[1] : '';
+  const tempUnit = match ? match[2] : '°C'; // или fallback
+
   return (
     <div 
       className="forecast-card"
@@ -103,7 +105,9 @@ function ForecastCard({ temperature, date, icon }) {
     >
       <div className="forecast-temp">
         <strong>{tempValue}</strong>
-        <span className="forecast-unit" aria-hidden="true">{tempUnit}</span>
+        {tempUnit && (
+          <span className="forecast-unit" aria-hidden="true">{tempUnit}</span>
+        )}
       </div>
       <div className="forecast-date">{date}</div>
       <div className="forecast-icon" aria-hidden="true">

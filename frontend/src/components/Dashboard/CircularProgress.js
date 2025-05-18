@@ -26,8 +26,8 @@ const CircularProgress = ({
   type = 'energy',
   style = {} // Добавлен пропс для кастомных стилей
 }) => {
-  const radius = 80;
-  const size = 200;
+  const radius = 100;
+  const size = 250;
   const center = size / 2;
   const circumference = 2 * Math.PI * radius;
   const progress = Math.min(Math.max(value, 0), max);
@@ -43,8 +43,9 @@ const CircularProgress = ({
     <div style={{ 
       position: 'relative',
       flex: '0 0 auto',
-      margin: '20px',
+      margin: '0',
       transition: 'all 0.3s ease',
+      padding: '0 0',
       ...style // Применяем кастомные стили
     }}>
       <svg 
@@ -52,8 +53,8 @@ const CircularProgress = ({
         width={size}
         height={size}
         style={{
-          width: '200px',
-          height: '200px'
+          width: '250px',
+          height: '250px'
         }}
       >
         <defs>
@@ -73,7 +74,7 @@ const CircularProgress = ({
           cx={center}
           cy={center}
           r={radius}
-          strokeWidth="12"
+          strokeWidth="20"
           fill="none"
           stroke="rgba(255, 255, 255, 0.1)"
         />
@@ -82,7 +83,7 @@ const CircularProgress = ({
           cx={center}
           cy={center}
           r={radius}
-          strokeWidth="12"
+          strokeWidth="19"
           fill="none"
           strokeLinecap="round"
           stroke={`url(#gradient-${type})`}
@@ -102,7 +103,7 @@ const CircularProgress = ({
             x={center}
             y={center - 10}
             style={{
-              fontSize: '32px',
+              fontSize: '40px',
               fontWeight: '700',
               fill: color.main,
               opacity: 0.95,
@@ -118,7 +119,7 @@ const CircularProgress = ({
               x={center}
               y={center + 25 + index * 20}
               style={{
-                fontSize: '14px',
+                fontSize: '18px',
                 letterSpacing: '1px',
                 textTransform: 'uppercase',
                 opacity: '0.85',

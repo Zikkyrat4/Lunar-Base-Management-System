@@ -1,0 +1,111 @@
+.container {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #0b0c1a; /* Темно-космический фон */
+}
+
+.stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 200%;
+  animation: moveStars 60s linear infinite;
+  z-index: 0;
+  opacity: 0.15;
+  background-image: radial-gradient(#ffffff 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.loginWrapper {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 20px;
+}
+
+.card {
+  background: rgba(25, 28, 49, 0.7);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 255, 255, 0.15);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 400px;
+  animation: fadeInUp 0.8s ease-out;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.title {
+  text-align: center;
+  color: #00ffff;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  letter-spacing: 1px;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+.textField input {
+  color: white !important;
+}
+
+.textField label {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.textField .MuiOutlinedInput-root fieldset {
+  border-color: rgba(0, 255, 255, 0.3) !important;
+}
+
+.textField .MuiOutlinedInput-root:hover fieldset {
+  border-color: #00ffff !important;
+}
+
+.textField .MuiOutlinedInput-root.Mui-focused fieldset {
+  border-color: #00ffff !important;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+.button {
+  background: linear-gradient(45deg, #00f2ff, #a37aff);
+  color: white;
+  margin-top: 1.2rem;
+  margin-bottom: 1.2rem;
+  padding: 0.75rem;
+  font-weight: bold;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+.button:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes moveStars {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-50%, 50%);
+  }
+}

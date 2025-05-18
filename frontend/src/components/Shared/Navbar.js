@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import '../../styles/main.css';
+import AlertsPanel from '../Dashboard/AlertsPanel';
+import { BellOutlined } from '@ant-design/icons';
+import './Navbar.css';
 
 const Navbar = () => {
   const [activeItem, setActiveItem] = useState('dashboard');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showAlerts, setShowAlerts] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -16,15 +19,19 @@ const Navbar = () => {
   const menuItems = [
     { key: 'dashboard', label: 'Статистика', to: '/' },
     { key: 'map', label: 'Карта', to: '/map' },
-    { key: 'logistics', label: 'Логистика', to: '/logistics' },
     { key: 'analytics', label: 'Аналитика', to: '/analytics' },
     { key: 'profile', label: 'Профиль', to: '/profile' }
   ];
 
+  const handleOverlayClick = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
     <nav className="custom-navbar">
       <div className="navbar-wrapper">
-        
+
+        {/* Бургер-меню */}
         <button
           className={`menu-toggle ${isMenuOpen ? 'open' : ''}`}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -35,6 +42,9 @@ const Navbar = () => {
           <span></span>
         </button>
 
+        {/* Мобильное меню */}
+        {isMenuOpen && <div className="menu-overlay" onClick={handleOverlayClick}></div>}
+        
         <div className={`mobile-menu ${isMenuOpen ? 'active' : ''}`}>
           {menuItems.map(item => (
             <Link
@@ -51,6 +61,7 @@ const Navbar = () => {
           ))}
         </div>
 
+        {/* Десктопное меню */}
         <div className="desktop-menu">
           {menuItems.map(item => (
             <Link
@@ -63,6 +74,21 @@ const Navbar = () => {
             </Link>
           ))}
         </div>
+
+        {/* Иконка уведомлений */}
+        <div className="notification-icon" onClick={() => setShowAlerts(!showAlerts)}>
+          <BellOutlined 
+            style={{ fontSize: '20px', color: '#fff' }} 
+          />
+          
+          {/* Панель уведомлений */}
+          {showAlerts && (
+            <div className="alerts-dropdown">
+              <AlertsPanel />
+            </div>
+          )}
+        </div>
+
       </div>
     </nav>
   );

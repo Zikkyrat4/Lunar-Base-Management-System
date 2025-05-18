@@ -6,11 +6,16 @@ import api from '../../api/axios';
 import { loginSuccess, loginFailure } from '../../store/authSlice';
 import { message } from 'antd';
 
+// Импортируем стили
+import styles from './login_module.css';
+
 const Login = () => {
   const [credentials, setCredentials] = useState({
     username: '',
     password: ''
   });
+  const [loading, setLoading] = useState(false);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -23,6 +28,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await api.post(
         '/auth/login',
@@ -36,59 +42,74 @@ const Login = () => {
           }
         }
       );
-      
+
       dispatch(loginSuccess({
         user: { username: credentials.username },
         token: response.data.access_token
       }));
       navigate('/');
-      
     } catch (error) {
-      dispatch(loginFailure(error.response?.data?.detail || 'Login failed'));
+      dispatch(loginFailure(error.response?.data?.detail || 'Ошибка входа'));
       message.error('Неверные учетные данные');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <Container maxWidth="xs">
-      <Box sx={{ mt: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Typography component="h1" variant="h5">
-          Вход в систему
-        </Typography>
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            label="Имя пользователя"
-            name="username"
-            value={credentials.username}
-            onChange={handleChange}
-            autoComplete="username"
-            autoFocus
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Пароль"
-            type="password"
-            value={credentials.password}
-            onChange={handleChange}
-            autoComplete="current-password"
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Войти
-          </Button>
+    <div className={styles.container}>
+      <div className={styles.stars}></div>
+      <Container className={styles.loginWrapper}>
+        <Box className={styles.card}>
+          <Typography component="h1" variant="h5" className={styles.title}>
+            Вход в систему
+          </Typography>
+          <form onSubmit={handleSubmit}>
+            <TextField
+              className={styles.textField}
+              margin="normal"
+              required
+              fullWidth
+              label="Имя пользователя"
+              name="username"
+              value={credentials.username}
+              onChange={handleChange}
+              autoComplete="username"
+              autoFocus
+              disabled={loading}
+              InputLabelProps={{
+                style: { color: '#ccc' },
+              }}
+            />
+            <TextField
+              className={styles.textField}
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Пароль"
+              type="password"
+              value={credentials.password}
+              onChange={handleChange}
+              autoComplete="current-password"
+              disabled={loading}
+              InputLabelProps={{
+                style: { color: '#ccc' },
+              }}
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              className={styles.button}
+              disabled={loading}
+            >
+              {loading ? 'Подключение...' : 'Войти'}
+            </Button>
+          </form>
         </Box>
-      </Box>
-    </Container>
+      </Container>
+    </div>
   );
 };
 

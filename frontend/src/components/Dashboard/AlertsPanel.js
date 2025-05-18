@@ -1,109 +1,140 @@
-import React from 'react';
-import { Alert, Card, Space, Typography } from 'antd';
-import { WarningOutlined, InfoOutlined, CloseCircleOutlined } from '@ant-design/icons';
+/* eslint-disable no-unused-vars */
+import React, { useState, useRef, useEffect } from 'react';
+import {
+  WarningOutlined,
+  InfoOutlined,
+  CloseOutlined,
+  BellOutlined,
+  CaretDownOutlined
+} from '@ant-design/icons';
+import { CSSTransition } from 'react-transition-group';
 
-const { Title, Text } = Typography;
+import './../../styles/main.css';
+import './AlertsPanel.css';
 
 const AlertsPanel = () => {
-  const [alerts, setAlerts] = React.useState([
+  const [isOpen, setIsOpen] = useState(true);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [alerts, setAlerts] = useState([
     {
       id: 1,
       type: 'warning',
-      message: 'Низкий уровень кислорода (30%)',
-      description: 'Критически низкий уровень. Необходимо пополнить запасы.',
-      icon: <WarningOutlined />,
+      title: 'Низкий уровень кислорода',
+      description: 'Критически низкий уровень (30%). Необходимо пополнить запасы.',
       time: '2 мин назад'
     },
     {
       id: 2,
       type: 'info',
-      message: 'Запланировано техническое обслуживание',
-      description: 'Запланировано на 15:00 по лунному времени',
-      icon: <InfoOutlined />,
+      title: 'Запланировано ТО',
+      description: 'Техническое обслуживание запланировано на 15:00 по лунному времени',
       time: '1 час назад'
+    },
+    {
+      id: 3,
+      type: 'critical',
+      title: 'Сбой системы',
+      description: 'Обнаружена неисправность в модуле жизнеобеспечения. Требуется немедленное вмешательство.',
+      time: '5 мин назад'
     }
   ]);
 
-  const handleClose = (id) => {
-    setAlerts(alerts.filter(alert => alert.id !== id));
+  const panelRef = useRef(null);
+
+  const handleTogglePanel = () => {
+    setIsOpen(!isOpen);
   };
 
+  const handleToggleCollapse = () => {
+    setIsCollapsed(!isCollapsed);
+  };
+
+  const handleCloseAlert = (id, e) => {
+    e.stopPropagation();
+    setAlerts(prev => prev.filter(alert => alert.id !== id));
+  };
+
+  const getIcon = (type) => {
+    const icons = {
+      warning: <WarningOutlined className="alert-icon warning" />,
+      critical: <WarningOutlined className="alert-icon critical" />,
+      info: <InfoOutlined className="alert-icon info" />
+    };
+    return icons[type] || icons.info;
+  };
+
+  useEffect(() => {
+    if (alerts.length === 0) {
+      setIsOpen(false);
+    }
+  }, [alerts]);
+
   return (
-    <Card 
-      title={
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-          <Title level={4} style={{ color: 'white', margin: 0, fontWeight: 600 }}>
-            СИСТЕМНЫЕ УВЕДОМЛЕНИЯ
-          </Title>
-          <Text type="secondary" style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>
-            {alerts.length} активных
-          </Text>
-        </div>
-      }
-      headStyle={{ 
-        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-        background: 'rgba(0, 0, 0, 0.2)'
-      }}
-      bodyStyle={{ padding: '16px 12px' }}
-      style={{ 
-        background: 'rgba(255, 255, 255, 0.08)',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
-        backdropFilter: 'blur(8px)',
-        borderRadius: '16px'
-      }}
+    <CSSTransition
+      in={isOpen}
+      nodeRef={panelRef}
+      timeout={300}
+      classNames="alerts-panel"
+      unmountOnExit
+      onExited={() => setIsCollapsed(false)}
     >
-      <Space direction="vertical" style={{ width: '100%', gap: '12px' }}>
-        {alerts.map((alert) => (
-          <Alert
-            key={alert.id}
-            message={
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <div>
-                  <div style={{ 
-                    fontWeight: 600, 
-                    color: alert.type === 'warning' ? '#FFD166' : '#B8A1FF'
-                  }}>
-                    {alert.message}
-                  </div>
-                  <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>{alert.time}</div>
-                </div>
-                <CloseCircleOutlined 
-                  onClick={() => handleClose(alert.id)}
-                  style={{ 
-                    color: 'rgba(255, 255, 255, 0.4)',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                    fontSize: '16px',
-                    ':hover': {
-                      color: 'rgba(255, 255, 255, 0.8)'
-                    }
-                  }}
+      <div className="alerts-panel" ref={panelRef}>
+        <div className="alert-card">
+          <div 
+            className="alert-card-header" 
+            onClick={handleToggleCollapse}
+          >
+            <div className="alert-header-content">
+              <h3 className="alert-title">
+                <BellOutlined />
+                СИСТЕМНЫЕ УВЕДОМЛЕНИЯ
+              </h3>
+              <div className="alert-header-right">
+                {alerts.length > 0 && (
+                  <span className="alert-count">{alerts.length}</span>
+                )}
+                <CaretDownOutlined className={`collapse-icon ${isCollapsed ? 'collapsed' : ''}`} />
+                <CloseOutlined 
+                  className="panel-close-icon" 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleTogglePanel();
+                  }} 
                 />
               </div>
-            }
-            description={
-              <Text style={{ color: 'rgba(255,255,255,0.7)' }}>
-                {alert.description}
-              </Text>
-            }
-            type={alert.type}
-            icon={alert.icon}
-            showIcon
-            closable={false}
-            style={{
-              borderRadius: '12px',
-              border: alert.type === 'warning' 
-                ? '1px solid rgba(255, 209, 102, 0.3)' 
-                : '1px solid rgba(184, 161, 255, 0.3)',
-              background: alert.type === 'warning' 
-                ? 'rgba(255, 209, 102, 0.1)' 
-                : 'rgba(184, 161, 255, 0.1)',
-              backdropFilter: 'blur(4px)'
-            }}
-          />
-        ))}
-      </Space>
-    </Card>
+            </div>
+          </div>
+
+          <CSSTransition
+            in={!isCollapsed}
+            timeout={250}
+            classNames="alert-list"
+            unmountOnExit
+          >
+            <div className="alert-list">
+              {alerts.map((alert) => (
+                <div key={alert.id} className={`alert-item ${alert.type}`}>
+                  <div className="alert-message">
+                    {getIcon(alert.type)}
+                    <div className="alert-details">
+                      <div className="alert-header">
+                        <h4 className="alert-item-title">{alert.title}</h4>
+                        <CloseOutlined 
+                          className="alert-close" 
+                          onClick={(e) => handleCloseAlert(alert.id, e)} 
+                        />
+                      </div>
+                      <p className="alert-description">{alert.description}</p>
+                      <p className="alert-time">{alert.time}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CSSTransition>
+        </div>
+      </div>
+    </CSSTransition>
   );
 };
 

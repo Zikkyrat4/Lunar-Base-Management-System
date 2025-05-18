@@ -3,7 +3,7 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 40px;
-  margin-top: 50px;
+  margin-top: 20px;
   z-index: 3; /* поверх фона */
   position: relative;
 }
@@ -21,8 +21,8 @@
 }
 
 .progress-svg {
-  width: 180px;
-  height: 180px;
+  width: 220px;
+  height: 220px;
 }
 
 .progress-bg {

@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
-import { Drawer, Button, Dropdown, Menu, Space } from 'antd';
+import { Dropdown, Menu, Space } from 'antd';
 import { 
-  MenuOutlined, 
   PlusOutlined, 
   InfoCircleOutlined, 
-  HighlightOutlined,
-  ExportOutlined
+  HighlightOutlined
 } from '@ant-design/icons';
 import MapView from './MapView';
 
 const MobileMapView = () => {
-  const [menuVisible, setMenuVisible] = useState(false);
   const [contextMenu, setContextMenu] = useState(null);
 
   const handleMenuClick = ({ key }) => {
@@ -35,33 +32,6 @@ const MobileMapView = () => {
           });
         }}
       />
-      
-      <Button 
-        type="primary" 
-        icon={<MenuOutlined />}
-        onClick={() => setMenuVisible(true)}
-        style={{
-          position: 'absolute',
-          top: 10,
-          right: 10,
-          zIndex: 1000
-        }}
-      />
-      
-      <Drawer
-        title="Меню"
-        placement="right"
-        onClose={() => setMenuVisible(false)}
-        visible={menuVisible}
-        width="80%"
-      >
-        <Space direction="vertical" style={{ width: '100%' }}>
-          <Button block icon={<PlusOutlined />}>Добавить объект</Button>
-          <Button block icon={<HighlightOutlined />}>Измерить</Button>
-          <Button block icon={<InfoCircleOutlined />}>Информация</Button>
-          <Button block icon={<ExportOutlined />}>Экспорт</Button>
-        </Space>
-      </Drawer>
 
       {contextMenu?.visible && (
         <Dropdown

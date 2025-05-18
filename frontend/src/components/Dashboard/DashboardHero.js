@@ -21,18 +21,22 @@ const DashboardHero = () => {
       overflow: 'hidden',
       fontFamily: '"Orbitron", sans-serif',
       zIndex: 1,
-      paddingTop: isMobile ? '40px' : '0' // Замена отрицательного margin
+      paddingTop: isMobile ? '40px' : '0' 
     }}>
-      <div style={{
-        position: 'relative',
-        zIndex: 10,
-        maxWidth: '1200px',
-        padding: '0',
-        textAlign: 'center',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center'
-      }}>
+    <div style={{
+      position: 'relative',
+      zIndex: 10,
+      maxWidth: '1200px',
+      padding: '0',
+      textAlign: 'center',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      marginBottom: '400px',
+      marginTop: '90px',
+      width: '100%',
+      boxSizing: 'border-box'
+    }}>
          <Title level={1} style={{
           color: 'white',
           fontSize: isMobile ? '2rem' : '4rem',
@@ -44,7 +48,7 @@ const DashboardHero = () => {
           WebkitTextFillColor: 'transparent',
           position: 'relative'
         }}>
-          ЛУННАЯ БАЗА "ШЕРЛОК"
+          ЛУННАЯ БАЗА "SHERLOCK"
         </Title>
         
         <Text style={{
@@ -64,7 +68,7 @@ const DashboardHero = () => {
           display: 'grid',
           gridTemplateColumns: isMobile ? '1fr' : 'repeat(4, 1fr)',
           gap: isMobile ? '15px' : '40px',
-          margin: '60px 0',
+          margin: '10px 0',
           position: 'relative',
           alignItems: 'flex-end',
           perspective: '1000px'
