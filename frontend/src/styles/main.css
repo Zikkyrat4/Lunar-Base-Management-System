@@ -3,7 +3,7 @@
    ========================================================================== */
    :root {
     /* Цвета */
-    --primary-gradient: linear-gradient(135deg, #6a0dad, #b8a1ff);
+    --primary-gradient: linear-gradient(135deg, #0074D9, #6BA8FF);
     --text-color: #ffffff;
     --bg-color: #001529;
     --card-bg: rgba(255, 255, 255, 0.05);
@@ -157,6 +157,25 @@ body::before {
     background: var(--card-bg);
     box-shadow: var(--shadow);
   }
+
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(56, 189, 248, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(56, 189, 248, 0);
+    }
+  }
+
+  .settings-button:hover {
+    transform: scale(1.1) rotate(15deg);
+    background: rgba(56, 189, 248, 1);
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+  }
+
   
   /* ==========================================================================
      📱 Адаптивные стили (до 768px)

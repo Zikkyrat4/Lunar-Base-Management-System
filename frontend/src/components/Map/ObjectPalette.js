@@ -54,9 +54,12 @@ const objectTypes = [
 const ObjectPalette = ({ onSelectObject, selectedType }) => {
   return (
     <div className="object-palette" style={{ 
-      maxHeight: '400px', // Ограничиваем высоту
-      overflowY: 'auto',  // Добавляем вертикальную прокрутку
-      padding: '8px'
+      maxHeight: '400px',
+      overflowY: 'auto',
+      padding: '8px',
+      background: 'rgba(255, 255, 255, 0.9)',
+      borderRadius: '12px',
+      boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
     }}>
       <h3 style={{ 
         textAlign: 'center', 
@@ -80,7 +83,10 @@ const ObjectPalette = ({ onSelectObject, selectedType }) => {
                 style={{ 
                   borderColor: obj.color,
                   padding: '8px 4px',
-                  height: '80px' // Фиксированная высота для каждого элемента
+                  height: '80px',
+                  background: 'rgba(255, 255, 255, 0.7)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: '8px'
                 }}
               >
                 <div className="object-icon" style={{ color: obj.color }}>

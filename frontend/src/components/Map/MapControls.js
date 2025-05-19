@@ -274,35 +274,36 @@ const MapControls = ({
 
   return (
     <Popover
-      content={content}
-      title="Управление картой"
-      trigger="click"
-      open={open}
-      onOpenChange={setOpen}
-      placement="rightTop"
-      overlayStyle={{ width: 320 }}
-    >
-      <Button 
-        type="primary" 
-        icon={<SettingOutlined />}
-        style={{
-          position: 'fixed',
-          top: 80,
-          left: 10,
-          zIndex: 1000,
-          width: 40,
-          height: 40,
-          borderRadius: '50%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-          backgroundColor: 'rgba(10, 10, 20, 0.85)',
-          backdropFilter: 'blur(5px)',
-          border: '1px solid rgba(255, 255, 255, 0.1)'
-        }}
-      />
-    </Popover>
+    content={content}
+    title="Управление картой"
+    trigger="click"
+    open={open}
+    onOpenChange={setOpen}
+    placement="rightTop"
+    overlayStyle={{ width: 320 }}
+  >
+    <Button 
+      type="primary" 
+      icon={<SettingOutlined style={{ fontSize: '20px' }} />}
+      style={{
+        position: 'fixed',
+        top: 80,
+        left: 10,
+        zIndex: 1000,
+        width: 44,
+        height: 44,
+        borderRadius: '12px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        boxShadow: '0 4px 12px rgba(0, 210, 255, 0.4)',
+        background: 'linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%)',
+        border: 'none',
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+      }}
+      className="settings-button"
+    />
+  </Popover>
   );
 };
 

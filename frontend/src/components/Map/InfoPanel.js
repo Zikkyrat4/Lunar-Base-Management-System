@@ -63,11 +63,11 @@ const InfoPanel = ({
         bottom: 20,
         right: 20,
         zIndex: 1000,
-        borderRadius: '8px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-        backgroundColor: 'rgba(10, 10, 20, 0.85)', 
-        backdropFilter: 'blur(5px)',
-        border: '1px solid rgba(255, 255, 255, 0.1)'
+        borderRadius: '12px',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
+        backgroundColor: '#ffffff',
+        border: '1px solid rgba(0, 0, 0, 0.1)', 
+        color: '#000000' 
       }}
       bodyStyle={{ 
         padding: isCollapsed ? '0' : '12px',
