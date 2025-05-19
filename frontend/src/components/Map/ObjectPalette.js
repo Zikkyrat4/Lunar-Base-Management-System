@@ -61,18 +61,6 @@ const ObjectPalette = ({ onSelectObject, selectedType }) => {
       borderRadius: '12px',
       boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
     }}>
-      <h3 style={{ 
-        textAlign: 'center', 
-        marginBottom: '16px',
-        position: 'sticky',
-        top: 0,
-        background: 'rgba(61, 124, 233, 0.85)',
-        padding: '8px 0',
-        zIndex: 1,
-        backdropFilter: 'blur(5px)'
-      }}>
-        Типы объектов
-      </h3>
       <Row gutter={[8, 8]} style={{ marginBottom: '8px' }}>
         {objectTypes.map((obj) => (
           <Col span={12} key={obj.type}>
