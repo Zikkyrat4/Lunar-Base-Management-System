@@ -139,31 +139,46 @@ const MapControls = ({
   const content = (
     <div style={{ width: 280, padding: '8px 0' }}>
       <div style={{ display: 'flex', marginBottom: 8 }}>
-        <Button 
-          type={activeTab === 'objects' ? 'primary' : 'default'} 
-          onClick={() => setActiveTab('objects')}
-          icon={<PlusOutlined />}
-          style={{ flex: 1, marginRight: 4 }}
-        >
-          Объекты
-        </Button>
-        <Button 
-          type={activeTab === 'maps' ? 'primary' : 'default'} 
-          onClick={() => setActiveTab('maps')}
-          icon={<UploadOutlined />}
-          style={{ flex: 1, marginRight: 4 }}
-        >
-          Карты
-        </Button>
-        <Button 
-          type={activeTab === 'layers' ? 'primary' : 'default'} 
-          onClick={() => setActiveTab('layers')}
-          icon={<AppstoreOutlined />}
-          style={{ flex: 1 }}
-        >
-          Слои
-        </Button>
-      </div>
+      <Button 
+        type={activeTab === 'objects' ? 'primary' : 'default'} 
+        onClick={() => setActiveTab('objects')}
+        icon={<PlusOutlined />}
+        style={{ 
+          flex: 1, 
+          marginRight: 4,
+          background: activeTab === 'objects' ? '#1890ff' : 'rgba(255, 255, 255, 0.08)',
+          borderColor: 'rgba(255, 255, 255, 0.12)'
+        }}
+      >
+        Объекты
+      </Button>
+      <Button 
+        type={activeTab === 'maps' ? 'primary' : 'default'} 
+        onClick={() => setActiveTab('maps')}
+        icon={<UploadOutlined />}
+        style={{ 
+          flex: 1, 
+          marginRight: 4,
+          background: activeTab === 'maps' ? '#1890ff' : 'rgba(255, 255, 255, 0.08)',
+          borderColor: 'rgba(255, 255, 255, 0.12)'
+        }}
+      >
+        Карты
+      </Button>
+      <Button 
+        type={activeTab === 'layers' ? 'primary' : 'default'} 
+        onClick={() => setActiveTab('layers')}
+        icon={<AppstoreOutlined />}
+        style={{ 
+          flex: 1,
+          background: activeTab === 'layers' ? '#1890ff' : 'rgba(255, 255, 255, 0.08)',
+          borderColor: 'rgba(255, 255, 255, 0.12)'
+        }}
+      >
+        Слои
+      </Button>
+    </div>
+
 
       <Divider style={{ margin: '8px 0' }} />
 

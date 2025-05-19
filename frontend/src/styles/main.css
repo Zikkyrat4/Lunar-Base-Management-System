@@ -135,16 +135,27 @@ body::before {
   /* ==========================================================================
      🎛️ Стили Ant Design и Material UI
      ========================================================================== */
-  .ant-btn-primary {
-    background: var(--primary-gradient);
-    border-color: transparent;
-    transition: transform 0.3s ease;
-  }
+    .ant-btn-primary {
+      background: #1890ff;
+      border-color: #1890ff;
+    }
+
   
-  .ant-btn-primary:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
-  }
+    .ant-btn-primary:hover {
+      background: #40a9ff;
+      border-color: #40a9ff;
+    }
+    .ant-btn-default {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.12);
+      color: #000;
+    }
+    
+    .ant-btn-default:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #000;
+    }
   
   .MuiCircularProgress-root {
     background: rgba(255, 255, 255, 0.1);

@@ -97,7 +97,11 @@ const MapUpload = ({ onUploadSuccess }) => {
         type="primary" 
         icon={<UploadOutlined />} 
         onClick={() => setVisible(true)}
-        style={{ marginBottom: 16 }}
+        style={{ 
+          marginBottom: 16,
+          background: '#1890ff',
+          borderColor: '#1890ff'
+        }}
       >
         Загрузить карту
       </Button>

@@ -66,7 +66,7 @@ const ObjectPalette = ({ onSelectObject, selectedType }) => {
         marginBottom: '16px',
         position: 'sticky',
         top: 0,
-        background: 'rgba(10, 10, 20, 0.85)',
+        background: 'rgba(61, 124, 233, 0.85)',
         padding: '8px 0',
         zIndex: 1,
         backdropFilter: 'blur(5px)'
