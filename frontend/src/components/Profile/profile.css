@@ -11,7 +11,7 @@
   --text-strong: #FFFFFF;
   --text-highlight: #E5E7EB; /* Ещё ярче для заголовков */
   --muted-dark: #6B7280;
-  
+
   /* === Эффекты === */
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -164,6 +164,7 @@ body {
   align-items: center;
   gap: 0.6rem;
   transition: all var(--transition);
+  word-break: break-word;
 }
 
 .mission-goal-item:hover {
@@ -215,8 +216,51 @@ h3:hover::after {
   .profile-container {
     padding: 4rem;
   }
-  
+
   .profile-item {
     padding: 1.5rem 2.5rem;
+  }
+}
+
+/* === Адаптация под мобильные устройства (< 768px) === */
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 1.5rem;
+  }
+
+  .profile-item {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.2rem 1.5rem;
+  }
+
+  .profile-label,
+  .profile-value {
+    text-align: left;
+    width: 100%;
+  }
+
+  .mission-goal-item {
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 1rem;
+  }
+
+  .mission-goal-icon {
+    margin-bottom: 0.4rem;
+  }
+
+  .profile-name {
+    font-size: 2rem;
+  }
+
+  .profile-position,
+  .profile-meta {
+    font-size: 1rem;
+  }
+
+  h2,
+  h3 {
+    font-size: 1.5rem;
   }
 }
